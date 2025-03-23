@@ -1,0 +1,60 @@
+---
+# File: values.yaml
+envDirect:
+  logLevel: debug
+  replicas: 3
+  useCache: true
+
+config:
+  redisHost: redis.internal
+  dbPassword:
+    valueFrom:
+      secretKeyRef:
+        name: app-secrets
+        key: db-password
+
+customBlock:
+  port: 8080
+  logPath:
+    valueFrom:
+      configMapKeyRef:
+        name: app-config
+        key: log-path
+
+topValueFrom:
+  valueFrom:
+    secretKeyRef:
+      name: top-secret
+      key: api-key
+
+simpleEnvVar: basic
+
+edgeCases:
+  has_underscores: snake_case
+  mixedCASEValue: "MiXeD123"
+  valueFromOnly:
+    valueFrom:
+      secretKeyRef:
+        name: edge-secret
+        key: key-one
+  plainString: "hello"
+  boolValue: false
+  numberValue: 42
+
+extraEdgeCases:
+  mapAndValue:
+    valueFrom:
+      configMapKeyRef:
+        name: extra-config
+        key: map-key
+  justAnother: true
+  emptyString: ""
+  numericString: "007"
+
+deepBlock:
+  top: shouldBeIgnored
+  inner:
+    valueFrom:
+      secretKeyRef:
+        name: deep-secret
+        key: hidden
