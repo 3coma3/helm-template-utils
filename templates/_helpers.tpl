@@ -50,17 +50,15 @@ Prefixing behavior
   {{- $parent := index . 0 -}}
   {{- $key := index . 1 -}}
 
+  {{- $prefix = (printf "%s_" (include "util.toSSCase" $key)) }}
   {{- $target = ((hasKey $parent $key) | ternary (get $parent $key) ($parent)) -}}
-  {{- $prefix = $key -}}
 {{- else if kindIs "map" . -}}
   {{- $target = . -}}
 {{- end -}}
 
-{{- if $prefix }}{{- $prefix = printf "%s_" (include "util.toSSCase" $prefix) }}{{- end -}}
-
 {{- if $target -}}
-  {{- $target = ((and (kindIs "map" $target) (not (hasKey $target "valueFrom"))) | ternary $target (set (dict) $prefix $target) ) -}}
-  {{ range $k, $v := $target }}- name: {{ (printf "%s%s" $prefix (include "util.toSSCase" $k)) }}
+  {{- $target = ((and (kindIs "map" $target) (not (hasKey $target "valueFrom"))) | ternary $target (set (dict) "" $target) ) -}}
+  {{ range $k, $v := $target }}- name: {{ (eq $k "") | ternary (trimSuffix "_" $prefix) (printf "%s%s" $prefix (include "util.toSSCase" $k)) }}
       {{- (and (kindIs "map" $v) (hasKey $v "valueFrom")) | ternary
           (printf "%s\n" (toYaml $v | nindent 2))
           (printf "\n  value: %s\n" (quote $v))
