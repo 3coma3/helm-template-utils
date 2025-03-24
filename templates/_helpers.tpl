@@ -43,18 +43,17 @@ Prefixing behavior
   else the parent itself is processed
 */}}
 {{- define "util.toEnv" -}}
-{{- $args := . -}}
 {{- $prefix := "" -}}
 {{- $target := dict -}}
 
-{{- if kindIs "slice" $args -}}
-  {{- $parent := index $args 0 -}}
-  {{- $key := index $args 1 -}}
+{{- if kindIs "slice" . -}}
+  {{- $parent := index . 0 -}}
+  {{- $key := index . 1 -}}
 
   {{- $target = ((hasKey $parent $key) | ternary (get $parent $key) ($parent)) -}}
   {{- $prefix = $key -}}
-{{- else if kindIs "map" $args -}}
-  {{- $target = $args -}}
+{{- else if kindIs "map" . -}}
+  {{- $target = . -}}
 {{- end -}}
 
 {{- if $prefix }}{{- $prefix = printf "%s_" (include "util.toSSCase" $prefix) }}{{- end -}}
