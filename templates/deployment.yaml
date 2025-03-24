@@ -17,60 +17,61 @@ spec:
         - name: direct-env
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values "envDirect") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values "envDirect") | nindent 12 }}
 
         - name: config-env
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values "config") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values "config") | nindent 12 }}
 
         - name: custom-prefix-env
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values.customBlock "CUSTOM") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values.customBlock "CUSTOM") | nindent 12 }}
 
         - name: top-valuefrom
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values "topValueFrom") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values "topValueFrom") | nindent 12 }}
 
         - name: missing-parent-onearg
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" .Values.nonexistentBlock | trim | nindent 12 }}
+          env:{{ include "util.toEnv" .Values.nonexistentBlock | nindent 12 }}
 
         - name: missing-parent-twoarg
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values.nonexistentBlock "MISSING") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values.nonexistentBlock "MISSING") | nindent 12 }}
 
         - name: string-onearg
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values "simpleEnvVar") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values "simpleEnvVar") | nindent 12 }}
 
         - name: edge-cases
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values.edgeCases "EDGE") | trim | nindent 12 }}
+          env:{{ include "util.toEnv" (list .Values.edgeCases "EDGE") | nindent 12 }}
 
         - name: edge-cases-2
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values "edgeCases") | trim | nindent 12 }}
+          env:{{- include "util.toEnv" (list .Values "edgeCases") | nindent 12 }}
 
         - name: edge-cases-3
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" .Values.edgeCases | trim | nindent 12 }}
+          env:{{- include "util.toEnv" .Values.edgeCases | nindent 12 }}
 
         - name: extra-edge-mixed
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values.extraEdgeCases "XEDGE") | trim | nindent 12 }}
+          env:{{- include "util.toEnv" (list .Values.extraEdgeCases "XEDGE") | nindent 12 }}
 
         - name: nested-valuefrom
           image: alpine:3
           command: ["sleep", "3600"]
-          env:{{ include "util.toEnv" (list .Values.deepBlock "DEEP") | trim | nindent 12 }}
+          env:
+          {{- include "util.toEnv" (list .Values.deepBlock "DEEP") | nindent 12 }}
 

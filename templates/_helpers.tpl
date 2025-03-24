@@ -45,45 +45,27 @@ Prefixing behavior
 {{- define "util.toEnv" -}}
 {{- $args := . -}}
 {{- $prefix := "" -}}
-{{- $value := dict -}}
+{{- $target := dict -}}
 
 {{- if kindIs "slice" $args -}}
   {{- $parent := index $args 0 -}}
   {{- $key := index $args 1 -}}
-  {{- if hasKey $parent $key -}}
-    {{- $prefix = include "util.toSSCase" $key -}}
-    {{- $value = get $parent $key -}}
-  {{- else -}}
-    {{- $prefix = $key -}}
-    {{- $value = $parent -}}
-  {{- end -}}
+
+  {{- $target = ((hasKey $parent $key) | ternary (get $parent $key) ($parent)) -}}
+  {{- $prefix = $key -}}
 {{- else if kindIs "map" $args -}}
-  {{- $value = $args -}}
+  {{- $target = $args -}}
 {{- end -}}
 
-{{- if $value -}}
-  {{- if and (kindIs "map" $value) (not (hasKey $value "valueFrom")) -}}
-    {{- range $k, $v := $value }}
-{{- $name := (printf "%s_%s" $prefix (include "util.toSSCase" $k)) | trimPrefix "_" }}
-{{- if and (kindIs "map" $v) (hasKey $v "valueFrom") }}
-- name: {{ $name }}
-  valueFrom:{{ toYaml (get $v "valueFrom") | nindent 2 | indent 2 }}
-{{- else }}
-- name: {{ $name }}
-  value: {{ quote $v }}
-{{- end }}
-    {{- end }}
-  {{- else }}
-    {{- $name := include "util.toSSCase" $prefix -}}
-    {{- if and (kindIs "map" $value) (hasKey $value "valueFrom") -}}
-- name: {{ $name }}
-  valueFrom:{{ toYaml (get $value "valueFrom") | nindent 2 | indent 2 }}
-    {{- else -}}
-- name: {{ $name }}
-  value: {{ quote $value }}
-    {{- end }}
-  {{- end }}
-{{- end }}
+{{- if $prefix }}{{- $prefix = printf "%s_" (include "util.toSSCase" $prefix) }}{{- end -}}
+
+{{- if $target -}}
+  {{- $target = ((and (kindIs "map" $target) (not (hasKey $target "valueFrom"))) | ternary $target (set (dict) $prefix $target) ) -}}
+  {{ range $k, $v := $target }}- name: {{ (printf "%s%s" $prefix (include "util.toSSCase" $k)) }}
+      {{- (and (kindIs "map" $v) (hasKey $v "valueFrom")) | ternary
+          (printf "%s\n" (toYaml $v | nindent 2))
+          (printf "\n  value: %s\n" (quote $v))
+      -}}
+  {{ end }}
 {{- end -}}
-
-
+{{- end -}}
