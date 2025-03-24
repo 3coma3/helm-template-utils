@@ -44,10 +44,15 @@ spec:
           command: ["sleep", "3600"]
           env:{{ include "util.toEnv" (list .Values.nonexistentBlock "MISSING") | nindent 12 }}
 
-        - name: string-onearg
+        - name: simple-env-var
           image: alpine:3
           command: ["sleep", "3600"]
           env:{{ include "util.toEnv" (list .Values "simpleEnvVar") | nindent 12 }}
+
+        - name: case-conventions
+          image: alpine:3
+          command: ["sleep", "3600"]
+          env:{{ include "util.toEnv" .Values.caseConventions | nindent 12 }}
 
         - name: edge-cases
           image: alpine:3

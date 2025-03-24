@@ -1,17 +1,23 @@
 {{/*
 Description
-  Formats a string into SCREAMING_SNAKE_CASE
+  Normalizes strings into SCREAMING_SNAKE_CASE
 
 Usage
-  {{ include "helpers.SSCase" camelString }}
+  {{ include "helpers.SSCase" string }}
 
-Behaviors:
-- converts camelCase, PascalCase and snake_case to SCREAMING_SNAKE_CASE
-- preserves underscores (without duplication), and numbers
+Supported conventions:
+- camelCase, PascalCase, SCREAMING-KEBAB, Train-Case, camel.Snake.Dot,
+  snake_case, camel_Snake, kebab-case, mixedCASEValue, snake_case
+
+Behaviors
+- converts non-alphanumeric, non underscore characters to underscores
+- deduplicates underscores
+- non alphanumeric delimiters have priority
 */}}
 {{- define "util.SSCase" -}}
-{{- $snake := regexReplaceAll "([a-z0-9])([A-Z])" . "${1}_${2}" -}}
-{{- upper $snake -}}
+{{- $snake := regexReplaceAll "[^a-zA-Z0-9]" . "_" -}}
+{{- $snake = regexReplaceAll "_+" $snake "_" -}}
+{{- regexReplaceAll "([a-z0-9])([A-Z])" $snake "${1}_${2}" | upper -}}
 {{- end -}}
 
 {{/*
@@ -34,7 +40,9 @@ Behaviors
   - maps generate multiple entries
   - keys containing valueFrom are rendered properly
 - supports mixed scalar and valueFrom maps
-- silently skips undefined, missing and non scalar keys (minus valueFrom)
+- silently skips:
+  - undefined and missing keys
+  - undefined, missing and non scalar subkeys (except valueFrom)
 - uses util.SSCase internally, refer to that template for conversion rules
 */}}
 {{- define "util.toEnv" -}}
