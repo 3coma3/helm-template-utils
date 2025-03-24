@@ -75,3 +75,9 @@ spec:
           env:
           {{- include "util.toEnv" (list .Values.deepBlock "DEEP") | nindent 12 }}
 
+        - name: ext-storage
+          image: alpine:3
+          command: ["sleep", "3600"]
+          env:
+          {{- include "util.toEnv" (list .Values "extStorage") | nindent 12 }}
+

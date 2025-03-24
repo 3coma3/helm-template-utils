@@ -29,9 +29,21 @@ topValueFrom:
 
 simpleEnvVar: basic
 
+caseConventions:
+  camelCase: snake_case
+  camel_Snake_Case: camel_Snake_Case
+  camel.Snake.Dot: camel.Snake.Dot
+  snake_case: snake_case
+  kebab-case: kebab-case
+  SCREAMING-KEBAB-CASE: SCREAMING-KEBAB-CASE
+  PascalCase: PascalCase
+  Train-Case: Train-Case
+  mixedCASEValue: "mixedCASEValue"
+  mMiXeD123: "MiXeD123 - not supported"
+  spOngeBoB_CaSe: "spOngeBoB_Case - not supported"
+  spOngeBoB-KeBaB-CaSe: "spOngeBoB-KeBaB-Case - not supported"
+
 edgeCases:
-  has_underscores: snake_case
-  mixedCASEValue: "MiXeD123"
   valueFromOnly:
     valueFrom:
       secretKeyRef:
@@ -58,3 +70,41 @@ deepBlock:
       secretKeyRef:
         name: deep-secret
         key: hidden
+
+someOuter:
+  someInner:
+    enabled: true
+    name: default
+    path: "/"
+    protocol: s3
+    attachments: true
+    backups: true
+
+    s3:
+      endpoint: https://s3.url
+      region: s3-region
+      accessKey:
+        valueFrom:
+        secretKeyRef:
+          name: secret-s3
+          key: accessKey
+      secretKey:
+        valueFrom:
+          secretKeyRef:
+            name: secret-s3
+            key: secretKey
+
+    sftp:
+      host: localhost
+      port: 22
+      user:
+        valueFrom:
+          secretKeyRef:
+            name: secret-sftp
+            key: username
+      password:
+        valueFrom:
+          secretKeyRef:
+            name: secret-sftp
+            key: password
+      agent: false

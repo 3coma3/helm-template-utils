@@ -34,7 +34,7 @@ Behaviors
   - maps generate multiple entries
   - keys containing valueFrom are rendered properly
 - supports mixed scalar and valueFrom maps
-- skips undefined or missing keys silently
+- silently skips undefined, missing and non scalar keys (minus valueFrom)
 - uses util.SSCase internally, refer to that template for conversion rules
 */}}
 {{- define "util.toEnv" -}}
@@ -51,11 +51,14 @@ Behaviors
 
 {{- if $target -}}
   {{- $target = ((and (kindIs "map" $target) (not (hasKey $target "valueFrom"))) | ternary $target (set (dict) "" $target) ) -}}
-  {{ range $k, $v := $target }}- name: {{ (eq $k "") | ternary (trimSuffix "_" $prefix) (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
+  {{ range $k, $v := $target }}
+    {{- if or (not (kindIs "map" $v)) (hasKey $v "valueFrom") -}}
+- name: {{ (eq $k "") | ternary (trimSuffix "_" $prefix) (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
       {{- (and (kindIs "map" $v) (hasKey $v "valueFrom")) | ternary
           (printf "%s\n" (toYaml $v | nindent 2))
           (printf "\n  value: %s\n" (quote $v))
       -}}
+    {{- end -}}
   {{ end }}
 {{- end -}}
 {{- end -}}
