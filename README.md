@@ -6,11 +6,11 @@ Reusable helper templates for Kubernetes manifests
 
 ## Templates
 
-`util.SSCase`
+`SSCase`
 
 Normalizes strings into SCREAMING_SNAKE_CASE
 
-`util.toEnv`
+`toEnv`
 
 Maps values to Kubernetes EnvVar fields
 

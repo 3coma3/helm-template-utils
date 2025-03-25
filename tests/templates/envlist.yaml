@@ -1,43 +1,43 @@
 # envlist.yaml
 envlist:
   - name: direct-env
-    env: {{ include "util.toEnv" (list .Values "envDirect") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values "envDirect") | nindent 6 }}
 
   - name: config-env
-    env: {{ include "util.toEnv" (list .Values "config") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values "config") | nindent 6 }}
 
   - name: custom-prefix-env
-    env: {{ include "util.toEnv" (list .Values.customBlock "CUSTOM") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values.customBlock "CUSTOM") | nindent 6 }}
 
   - name: top-valuefrom
-    env: {{ include "util.toEnv" (list .Values "topValueFrom") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values "topValueFrom") | nindent 6 }}
 
   - name: missing-parent-onearg
-    env: {{ include "util.toEnv" .Values.nonexistentBlock | nindent 6 }}
+    env: {{ include "toEnv" .Values.nonexistentBlock | nindent 6 }}
 
   - name: missing-parent-twoarg
-    env: {{ include "util.toEnv" (list .Values.nonexistentBlock "MISSING") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values.nonexistentBlock "MISSING") | nindent 6 }}
 
   - name: simple-env-var
-    env: {{ include "util.toEnv" (list .Values "simpleEnvVar") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values "simpleEnvVar") | nindent 6 }}
 
   - name: case-conventions
-    env: {{ include "util.toEnv" .Values.caseConventions | nindent 6 }}
+    env: {{ include "toEnv" .Values.caseConventions | nindent 6 }}
 
   - name: edge-cases
-    env: {{ include "util.toEnv" (list .Values.edgeCases "EDGE") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values.edgeCases "EDGE") | nindent 6 }}
 
   - name: edge-cases-2
-    env: {{ include "util.toEnv" (list .Values "edgeCases") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values "edgeCases") | nindent 6 }}
 
   - name: edge-cases-3
-    env: {{ include "util.toEnv" .Values.edgeCases | nindent 6 }}
+    env: {{ include "toEnv" .Values.edgeCases | nindent 6 }}
 
   - name: extra-edge-mixed
-    env: {{ include "util.toEnv" (list .Values.extraEdgeCases "XEDGE") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values.extraEdgeCases "XEDGE") | nindent 6 }}
 
   - name: nested-valuefrom
-    env: {{ include "util.toEnv" (list .Values.deepBlock "inner") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values.deepBlock "inner") | nindent 6 }}
 
   - name: inner
-    env: {{ include "util.toEnv" (list .Values.someOuter.someInner.sftp "innerConfigSFTP") | nindent 6 }}
+    env: {{ include "toEnv" (list .Values.someOuter.someInner.sftp "innerConfigSFTP") | nindent 6 }}
