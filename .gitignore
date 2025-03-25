@@ -1,0 +1,8 @@
+# .gitignore
+*.vim
+Chart.lock
+charts
+*.tgz
+*.lock
+*.snap
+__snapshot__/

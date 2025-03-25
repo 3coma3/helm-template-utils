@@ -1,0 +1,9 @@
+# .helmignore
+*.vim
+.git/
+tests/
+dist/
+*.tgz
+*.lock
+*.snap
+__snapshot__/

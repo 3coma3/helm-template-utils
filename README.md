@@ -1,6 +1,6 @@
 # Helm template utilities
 
-Generic templates for boilerplate and misc utilities
+Reusable helper templates for Kubernetes manifests
 
 
 
@@ -8,11 +8,11 @@ Generic templates for boilerplate and misc utilities
 
 `util.SSCase`
 
-Converts different case conventions to screaming snake case
+Normalizes strings into SCREAMING_SNAKE_CASE
 
 `util.toEnv`
 
-Maps complex values into Kubernetes environment variable definitions.
+Maps values to Kubernetes EnvVar fields
 
 
 
@@ -21,7 +21,9 @@ Maps complex values into Kubernetes environment variable definitions.
 Run the test template with:
 
 ```bash
-helm template --debug test .
-
+make test
 ```
-
+or
+```bash
+make unittest
+```

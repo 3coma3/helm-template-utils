@@ -1,0 +1,395 @@
+suite: Test envlist helpers
+templates:
+  - templates/envlist.yaml
+tests:
+- it: sanity check
+  asserts:
+    - isNotNull:
+        path: envlist
+- it: direct-env should include env var ENV_DIRECT_LOG_LEVEL
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="direct-env")].env[?(@.name=="ENV_DIRECT_LOG_LEVEL")]
+      value:
+        &id001
+        name: ENV_DIRECT_LOG_LEVEL
+        value: debug
+- it: direct-env should include env var ENV_DIRECT_REPLICAS
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="direct-env")].env[?(@.name=="ENV_DIRECT_REPLICAS")]
+      value:
+        &id002
+        name: ENV_DIRECT_REPLICAS
+        value: '3'
+- it: direct-env should include env var ENV_DIRECT_USE_CACHE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="direct-env")].env[?(@.name=="ENV_DIRECT_USE_CACHE")]
+      value:
+        &id003
+        name: ENV_DIRECT_USE_CACHE
+        value: 'true'
+- it: config-env should include env var CONFIG_DB_PASSWORD
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="config-env")].env[?(@.name=="CONFIG_DB_PASSWORD")]
+      value:
+        &id004
+        name: CONFIG_DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: db-password
+            name: app-secrets
+- it: config-env should include env var CONFIG_REDIS_HOST
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="config-env")].env[?(@.name=="CONFIG_REDIS_HOST")]
+      value:
+        &id005
+        name: CONFIG_REDIS_HOST
+        value: redis.internal
+- it: custom-prefix-env should include env var CUSTOM_LOG_PATH
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="custom-prefix-env")].env[?(@.name=="CUSTOM_LOG_PATH")]
+      value:
+        &id006
+        name: CUSTOM_LOG_PATH
+        valueFrom:
+          configMapKeyRef:
+            key: log-path
+            name: app-config
+- it: custom-prefix-env should include env var CUSTOM_PORT
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="custom-prefix-env")].env[?(@.name=="CUSTOM_PORT")]
+      value:
+        &id007
+        name: CUSTOM_PORT
+        value: '8080'
+- it: top-valuefrom should include unnamed env var
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="top-valuefrom")].env[?(@.name=="_")]
+      value:
+        &id008
+        name: _
+        valueFrom:
+          secretKeyRef:
+            key: api-key
+            name: top-secret
+- it: direct-env should include env var ENV_DIRECT_LOG_LEVEL
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="direct-env")].env[?(@.name=="ENV_DIRECT_LOG_LEVEL")]
+      value:
+       *id001
+- it: direct-env should include env var ENV_DIRECT_REPLICAS
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="direct-env")].env[?(@.name=="ENV_DIRECT_REPLICAS")]
+      value:
+       *id002
+- it: direct-env should include env var ENV_DIRECT_USE_CACHE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="direct-env")].env[?(@.name=="ENV_DIRECT_USE_CACHE")]
+      value:
+       *id003
+- it: config-env should include env var CONFIG_DB_PASSWORD
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="config-env")].env[?(@.name=="CONFIG_DB_PASSWORD")]
+      value:
+       *id004
+- it: config-env should include env var CONFIG_REDIS_HOST
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="config-env")].env[?(@.name=="CONFIG_REDIS_HOST")]
+      value:
+       *id005
+- it: custom-prefix-env should include env var CUSTOM_LOG_PATH
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="custom-prefix-env")].env[?(@.name=="CUSTOM_LOG_PATH")]
+      value:
+       *id006
+- it: custom-prefix-env should include env var CUSTOM_PORT
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="custom-prefix-env")].env[?(@.name=="CUSTOM_PORT")]
+      value:
+       *id007
+- it: top-valuefrom should include unnamed env var
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="top-valuefrom")].env[?(@.name=="_")]
+      value:
+       *id008
+- it: simple-env-var should include unnamed env var
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="simple-env-var")].env[?(@.name=="_")]
+      value:
+        name: _
+        value: basic
+- it: case-conventions should include env var PASCAL_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="PASCAL_CASE")]
+      value:
+        name: PASCAL_CASE
+        value: PascalCase
+- it: case-conventions should include env var SCREAMING_KEBAB_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="SCREAMING_KEBAB_CASE")]
+      value:
+        name: SCREAMING_KEBAB_CASE
+        value: SCREAMING-KEBAB-CASE
+- it: case-conventions should include env var TRAIN_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="TRAIN_CASE")]
+      value:
+        name: TRAIN_CASE
+        value: Train-Case
+- it: case-conventions should include env var CAMEL_SNAKE_DOT
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="CAMEL_SNAKE_DOT")]
+      value:
+        name: CAMEL_SNAKE_DOT
+        value: camel.Snake.Dot
+- it: case-conventions should include env var CAMEL_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="CAMEL_CASE")]
+      value:
+        name: CAMEL_CASE
+        value: snake_case
+- it: case-conventions should include env var CAMEL_SNAKE_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="CAMEL_SNAKE_CASE")]
+      value:
+        name: CAMEL_SNAKE_CASE
+        value: camel_Snake_Case
+- it: case-conventions should include env var KEBAB_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="KEBAB_CASE")]
+      value:
+        name: KEBAB_CASE
+        value: kebab-case
+- it: case-conventions should include env var M_MI_XE_D123
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="M_MI_XE_D123")]
+      value:
+        name: M_MI_XE_D123
+        value: MiXeD123 - not supported
+- it: case-conventions should include env var MIXED_CASE_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="MIXED_CASE_VALUE")]
+      value:
+        name: MIXED_CASE_VALUE
+        value: mixedCASEValue
+- it: case-conventions should include env var SNAKE_CASE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="SNAKE_CASE")]
+      value:
+        name: SNAKE_CASE
+        value: snake_case
+- it: case-conventions should include env var SP_ONGE_BO_B_KE_BA_B_CA_SE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="SP_ONGE_BO_B_KE_BA_B_CA_SE")]
+      value:
+        name: SP_ONGE_BO_B_KE_BA_B_CA_SE
+        value: spOngeBoB-KeBaB-Case - not supported
+- it: case-conventions should include env var SP_ONGE_BO_B_CA_SE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="case-conventions")].env[?(@.name=="SP_ONGE_BO_B_CA_SE")]
+      value:
+        name: SP_ONGE_BO_B_CA_SE
+        value: spOngeBoB_Case - not supported
+- it: edge-cases should include env var EDGE_BOOL_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases")].env[?(@.name=="EDGE_BOOL_VALUE")]
+      value:
+        name: EDGE_BOOL_VALUE
+        value: 'false'
+- it: edge-cases should include env var EDGE_NUMBER_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases")].env[?(@.name=="EDGE_NUMBER_VALUE")]
+      value:
+        name: EDGE_NUMBER_VALUE
+        value: '42'
+- it: edge-cases should include env var EDGE_PLAIN_STRING
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases")].env[?(@.name=="EDGE_PLAIN_STRING")]
+      value:
+        name: EDGE_PLAIN_STRING
+        value: hello
+- it: edge-cases should include env var EDGE_VALUE_FROM_ONLY
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases")].env[?(@.name=="EDGE_VALUE_FROM_ONLY")]
+      value:
+        name: EDGE_VALUE_FROM_ONLY
+        valueFrom:
+          secretKeyRef:
+            key: key-one
+            name: edge-secret
+- it: edge-cases-2 should include env var EDGE_CASES_BOOL_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-2")].env[?(@.name=="EDGE_CASES_BOOL_VALUE")]
+      value:
+        name: EDGE_CASES_BOOL_VALUE
+        value: 'false'
+- it: edge-cases-2 should include env var EDGE_CASES_NUMBER_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-2")].env[?(@.name=="EDGE_CASES_NUMBER_VALUE")]
+      value:
+        name: EDGE_CASES_NUMBER_VALUE
+        value: '42'
+- it: edge-cases-2 should include env var EDGE_CASES_PLAIN_STRING
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-2")].env[?(@.name=="EDGE_CASES_PLAIN_STRING")]
+      value:
+        name: EDGE_CASES_PLAIN_STRING
+        value: hello
+- it: edge-cases-2 should include env var EDGE_CASES_VALUE_FROM_ONLY
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-2")].env[?(@.name=="EDGE_CASES_VALUE_FROM_ONLY")]
+      value:
+        name: EDGE_CASES_VALUE_FROM_ONLY
+        valueFrom:
+          secretKeyRef:
+            key: key-one
+            name: edge-secret
+- it: edge-cases-3 should include env var BOOL_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-3")].env[?(@.name=="BOOL_VALUE")]
+      value:
+        name: BOOL_VALUE
+        value: 'false'
+- it: edge-cases-3 should include env var NUMBER_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-3")].env[?(@.name=="NUMBER_VALUE")]
+      value:
+        name: NUMBER_VALUE
+        value: '42'
+- it: edge-cases-3 should include env var PLAIN_STRING
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-3")].env[?(@.name=="PLAIN_STRING")]
+      value:
+        name: PLAIN_STRING
+        value: hello
+- it: edge-cases-3 should include env var VALUE_FROM_ONLY
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="edge-cases-3")].env[?(@.name=="VALUE_FROM_ONLY")]
+      value:
+        name: VALUE_FROM_ONLY
+        valueFrom:
+          secretKeyRef:
+            key: key-one
+            name: edge-secret
+- it: extra-edge-mixed should include env var XEDGE_EMPTY_STRING
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="extra-edge-mixed")].env[?(@.name=="XEDGE_EMPTY_STRING")]
+      value:
+        name: XEDGE_EMPTY_STRING
+        value: ''
+- it: extra-edge-mixed should include env var XEDGE_JUST_ANOTHER
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="extra-edge-mixed")].env[?(@.name=="XEDGE_JUST_ANOTHER")]
+      value:
+        name: XEDGE_JUST_ANOTHER
+        value: 'true'
+- it: extra-edge-mixed should include env var XEDGE_MAP_AND_VALUE
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="extra-edge-mixed")].env[?(@.name=="XEDGE_MAP_AND_VALUE")]
+      value:
+        name: XEDGE_MAP_AND_VALUE
+        valueFrom:
+          configMapKeyRef:
+            key: map-key
+            name: extra-config
+- it: extra-edge-mixed should include env var XEDGE_NUMERIC_STRING
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="extra-edge-mixed")].env[?(@.name=="XEDGE_NUMERIC_STRING")]
+      value:
+        name: XEDGE_NUMERIC_STRING
+        value: '007'
+- it: nested-valuefrom should include unnamed env var
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="nested-valuefrom")].env[?(@.name=="_")]
+      value:
+        name: _
+        valueFrom:
+          secretKeyRef:
+            key: hidden
+            name: deep-secret
+- it: inner should include env var INNER_CONFIG_SFTP_AGENT
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="inner")].env[?(@.name=="INNER_CONFIG_SFTP_AGENT")]
+      value:
+        name: INNER_CONFIG_SFTP_AGENT
+        value: 'false'
+- it: inner should include env var INNER_CONFIG_SFTP_HOST
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="inner")].env[?(@.name=="INNER_CONFIG_SFTP_HOST")]
+      value:
+        name: INNER_CONFIG_SFTP_HOST
+        value: localhost
+- it: inner should include env var INNER_CONFIG_SFTP_PASSWORD
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="inner")].env[?(@.name=="INNER_CONFIG_SFTP_PASSWORD")]
+      value:
+        name: INNER_CONFIG_SFTP_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: password
+            name: secret-sftp
+- it: inner should include env var INNER_CONFIG_SFTP_PORT
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="inner")].env[?(@.name=="INNER_CONFIG_SFTP_PORT")]
+      value:
+        name: INNER_CONFIG_SFTP_PORT
+        value: '22'
+- it: inner should include env var INNER_CONFIG_SFTP_USER
+  asserts:
+  - equal:
+      path: envlist[?(@.name=="inner")].env[?(@.name=="INNER_CONFIG_SFTP_USER")]
+      value:
+        name: INNER_CONFIG_SFTP_USER
+        valueFrom:
+          secretKeyRef:
+            key: username
+            name: secret-sftp

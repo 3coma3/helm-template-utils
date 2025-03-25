@@ -1,6 +1,5 @@
 apiVersion: v2
-name: test-chart
-description: A Helm chart for testing the toEnv helper
-type: application
+type: library
+name: helm-template-utils
+description: Reusable helper templates for Kubernetes manifests
 version: 0.1.0
-appVersion: "1.0"

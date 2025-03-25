@@ -1,0 +1,8 @@
+apiVersion: v2
+name: helm-template-utils-tests
+description: "Tests for helm-template-utils"
+version: 0.1.0
+dependencies:
+  - name: helm-template-utils
+    version: 0.1.0
+    repository: file://..
