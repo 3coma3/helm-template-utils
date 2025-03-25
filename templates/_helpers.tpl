@@ -22,28 +22,31 @@ Behaviors
 
 {{/*
 Description
-  Formats single or nested values into lists of Kubernetes environment variables
+  Maps values to Kubernetes EnvVar fields
 
 Usage
 - Format a key, no prefix is added to variable names
-  {{ include "helpers.toEnv" someKey }}
+  {{ include "helpers.toEnv" targetKey }}
 
-- Format a key and add a custom prefix
-  {{ include "helpers.toEnv" (list someKey "prefix") }}
+- Format a key and add a custom prefix to variable names
+  {{ include "helpers.toEnv" (list targetKey "prefix") }}
 
-- Format a subkey and use it as prefix
-  {{ include "helpers.toEnv" (list parentKey "targetSubKey") }}
+- Format a key and use its name as prefix
+  {{ include "helpers.toEnv" (list parentKey "targetSubkey") }}
 
 Behaviors
-- supports scalars and maps for keys
+- Supports scalar and map targets
   - scalars (string, bool, number) become quoted values
   - maps generate multiple entries
-  - keys containing valueFrom are rendered properly
-- supports mixed scalar and valueFrom maps
-- silently skips:
+  - entries containing valueFrom are rendered properly
+  - supports mixed scalar/valueFrom maps
+
+- Silently skips:
   - undefined and missing keys
-  - undefined, missing and non scalar subkeys (except valueFrom)
-- uses util.SSCase internally, refer to that template for conversion rules
+  - types other than scalars and maps
+  - mapped subkeys except valueFrom (it's not recursive)
+
+- Uses util.SSCase internally, refer to that template for conversion rules
 */}}
 {{- define "util.toEnv" -}}
 {{- $target := dict -}}
