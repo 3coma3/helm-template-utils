@@ -5,19 +5,13 @@ Description
 Usage
   {{ include "helpers.SSCase" string }}
 
-Supported conventions:
-- camelCase, PascalCase, SCREAMING-KEBAB, Train-Case, camel.Snake.Dot,
-  snake_case, camel_Snake, kebab-case, mixedCASEValue, snake_case
-
 Behaviors
-- converts non-alphanumeric, non underscore characters to underscores
-- deduplicates underscores
-- non alphanumeric delimiters have priority
+- converts non-alphanumeric to (deduplicated) underscores
+- filters through snakecase | upper
 */}}
 {{- define "util.SSCase" -}}
-{{- $snake := regexReplaceAll "[^a-zA-Z0-9]" . "_" -}}
-{{- $snake = regexReplaceAll "_+" $snake "_" -}}
-{{- regexReplaceAll "([a-z0-9])([A-Z])" $snake "${1}_${2}" | upper -}}
+{{- $snake := regexReplaceAll "[^[:alnum:]]" . "_" -}}
+{{- regexReplaceAll "_+" $snake "_" | snakecase | upper -}}
 {{- end -}}
 
 {{/*
