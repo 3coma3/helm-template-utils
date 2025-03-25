@@ -58,7 +58,7 @@ Behaviors
   {{- $target = ((and (kindIs "map" $target) (not (hasKey $target "valueFrom"))) | ternary $target (set (dict) "" $target) ) -}}
   {{ range $k, $v := $target }}
     {{- if or (not (kindIs "map" $v)) (hasKey $v "valueFrom") -}}
-- name: {{ (eq $k "") | ternary (trimSuffix "_" $prefix) (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
+- name: {{ (eq $k "") | ternary (trunc -1 $prefix) (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
       {{- (and (kindIs "map" $v) (hasKey $v "valueFrom")) | ternary
           (printf "%s\n" (toYaml $v | nindent 2))
           (printf "\n  value: %s\n" (quote $v))
