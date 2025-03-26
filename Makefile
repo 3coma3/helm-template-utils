@@ -27,7 +27,7 @@ unittest: test-clean deps
 test-clean:
 	@echo "🧹 Cleaning up test artifacts..."
 	@rm -rf $(TEST_CHART)/charts
-	@rm -rf $(TEST_CHART)/unittest/__snapshot__
+	@rm -rf $(TEST_CHART)/unit/__snapshot__
 	@rm -f $(TEST_CHART)/Chart.lock
 
 
