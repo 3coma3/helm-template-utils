@@ -2,6 +2,7 @@
 *.vim
 Chart.lock
 charts
+temp
 *.tgz
 *.lock
 *.snap
