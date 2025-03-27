@@ -10,8 +10,9 @@ Behaviors
 - filters through snakecase | upper
 */}}
 {{- define "util.SSCase" -}}
-{{- $snake := regexReplaceAll "[^[:alnum:]]" . "_" -}}
-{{- regexReplaceAll "_+" $snake "_" | snakecase | upper -}}
+{{- $normalize := regexReplaceAll "[^[:alnum:]]" . "_" -}}
+{{- $normalize = regexReplaceAll "_+" $normalize "_" }}
+{{- trimAll "_" $normalize | snakecase | upper -}}
 {{- end -}}
 
 {{/*
