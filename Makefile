@@ -1,3 +1,4 @@
+# Makefile
 SHELL := /bin/bash
 .SHELLFLAGS := -u -o pipefail -c
 
@@ -6,9 +7,8 @@ CHART_FILE := Chart.yaml
 TEMPLATE_FILE := templates/_util.tpl
 
 TEST_CHART := tests
-TEST_FILE := $(TEST_CHART)/unittest/envlist.yaml
-TEST_VALUES_FILE := $(TEST_CHART)/values.yaml
-TEST_CHART_FILE := $(TEST_CHART)/$(CHART_FILE)
+TEST_UNITS := $(TEST_CHART)/unit
+TEST_VALUES := $(TEST_CHART)/values.yaml
 
 .PHONY: deps
 deps:
@@ -18,16 +18,16 @@ deps:
 .PHONY: test unittest test-clean
 test: test-clean deps
 	@echo "🔍 Running template test for helpers..."
-	@helm template --debug test $(TEST_CHART) -f $(TEST_VALUES_FILE)
+	@helm template --debug test $(TEST_CHART) -f $(TEST_VALUES)
 
 unittest: test-clean deps
 	@echo "🔍 Running unit tests for helpers..."
-	@helm unittest $(TEST_CHART) -sf $(TEST_FILE)
+	@helm unittest $(TEST_CHART) -qsf "$(TEST_UNITS)/*"
 
 test-clean:
 	@echo "🧹 Cleaning up test artifacts..."
 	@rm -rf $(TEST_CHART)/charts
-	@rm -rf $(TEST_CHART)/unit/__snapshot__
+	@rm -rf $(TEST_UNITS)/__snapshot__
 	@rm -f $(TEST_CHART)/Chart.lock
 
 
