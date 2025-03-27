@@ -133,15 +133,21 @@ edgeCases:
         secretKeyRef:
           name: validValueFromName
           key: validValueFromKey
+    invalidValueFrom:
+      bogusKey: ignore
+      valueFrom:
+        secretKeyRef:
+          name: invalidValueFrom
+          key: ignore
     valueFrom:
       secretKeyRef:
-        name: ignoreValueFrom
+        name: invalidValueFrom
         key: ignore
-    anyMap:
+    ignoreAnyMap:
       anyMapKey1: ignore
       anyMapKey2: ignore
       anyMapKey3: ignore
-    anyList:
+    ignoreAnyList:
       - anyListEntry1: ignore
       - anyListEntry2: ignore
       - anyListEntry3: ignore
@@ -155,18 +161,24 @@ edgeCases:
           secretKeyRef:
             name: validValueFrom
             key: validValueFrom
-    - ignoreValueFrom:
+    - invalidValueFrom:
+        bogusKey: ignore
+        valueFrom:
+          secretKeyRef:
+            name: invalidValueFrom
+            key: ignore
+    - valueFrom:
         secretKeyRef:
-          name: ignoreValueFrom
+          name: invalidValueFrom
           key: ignore
     - ignoreAnyMap:
         anyMapKey1: ignore
         anyMapKey2: ignore
         anyMapKey3: ignore
     - ignoreAnyList:
-      - anyListEntry1: ignore
-      - anyListEntry2: ignore
-      - anyListEntry3: ignore
+        - anyListEntry1: ignore
+        - anyListEntry2: ignore
+        - anyListEntry3: ignore
 
   innerTargets:
     outer:
@@ -187,20 +199,46 @@ edgeCases:
               secretKeyRef:
                 name: s3-secret
                 key: secretKey
-      innerList:
-        - validStringValue: "hello"
-        - validBoolValue: false
-        - validNumberValue: 42
-        - innerList2:
+        innerList2:
           - endpoint: https://s3.url
           - region: s3-region
           - accessKey:
-            valueFrom:
-              secretKeyRef:
-                name: s3-secret
-                key: accessKey
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: accessKey
           - secretKey:
               valueFrom:
                 secretKeyRef:
                   name: s3-secret
                   key: secretKey
+      innerList:
+        - validStringValue: "hello"
+        - validBoolValue: false
+        - validNumberValue: 42
+        - innerMap2:
+            endpoint: https://s3.url
+            region: s3-region
+            accessKey:
+              valueFrom:
+              secretKeyRef:
+                name: s3-secret
+                key: accessKey
+            secretKey:
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: secretKey
+        - innerList2:
+            - endpoint: https://s3.url
+            - region: s3-region
+            - accessKey:
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: accessKey
+            - secretKey:
+                valueFrom:
+                  secretKeyRef:
+                    name: s3-secret
+                    key: secretKey
