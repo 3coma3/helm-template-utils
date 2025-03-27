@@ -1,0 +1,92 @@
+suite: SSCase Tests
+templates:
+  - sscase.yaml
+tests:
+  - it: sanity check
+    asserts:
+      - isNotNull:
+          path: envs
+
+  - it: "SSCase - camelCase"
+    asserts:
+      - equal:
+          path: env[0].value
+          value: "CAMEL_CASE"
+
+  - it: "SSCase - camel_Snake_Case"
+    asserts:
+      - equal:
+          path: env[1].value
+          value: "CAMEL_SNAKE_CASE"
+
+  - it: "SSCase - camel.snake.dot"
+    asserts:
+      - equal:
+          path: env[2].value
+          value: "CAMEL_SNAKE_DOT"
+
+  - it: "SSCase - snake_case"
+    asserts:
+      - equal:
+          path: env[3].value
+          value: "SNAKE_CASE"
+
+  - it: "SSCase - kebab-case"
+    asserts:
+      - equal:
+          path: env[4].value
+          value: "KEBAB_CASE"
+
+  - it: "SSCase - SCREAMING-KEBAB-CASE"
+    asserts:
+      - equal:
+          path: env[5].value
+          value: "SCREAMING_KEBAB_CASE"
+
+  - it: "SSCase - PascalCase"
+    asserts:
+      - equal:
+          path: env[6].value
+          value: "PASCAL_CASE"
+
+  - it: "SSCase - Train-Case"
+    asserts:
+      - equal:
+          path: env[7].value
+          value: "TRAIN_CASE"
+
+  - it: "SSCase - MixedCASEValue"
+    asserts:
+      - equal:
+          path: env[8].value
+          value: "MIXED_CASE_VALUE"
+
+  - it: "SSCase - non,.;alnum$!)*in%(+=@key&name"
+    asserts:
+      - equal:
+          path: env[9].value
+          value: "NON_ALNUM_IN_KEY_NAME"
+
+  - it: "SSCase - $delimitersBeginEnd_"
+    asserts:
+      - equal:
+          path: env[10].value
+          value: "DELIMITERS_BEGIN_END"
+
+  - it: "SSCase - mMiXeD123"
+    asserts:
+      - equal:
+          path: env[11].value
+          value: "MI_XE_D123_NOT_SUPPORTED"
+
+  - it: "SSCase - spOngeBoB_CaSe"
+    asserts:
+      - equal:
+          path: env[12].value
+          value: "SP_ONGE_BO_B_CASE_NOT_SUPPORTED"
+
+  - it: "SSCase - spOngeBoB-KeBaB-CaSe"
+    asserts:
+      - equal:
+          path: env[13].value
+          value: "SP_ONGE_BO_B_KE_BA_B_CASE_NOT_SUPPORTED"
