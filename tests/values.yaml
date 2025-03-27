@@ -1,36 +1,7 @@
+# values.yaml
 ---
-# File: values.yaml
-envDirect:
-  logLevel: debug
-  replicas: 3
-  useCache: true
-
-config:
-  redisHost: redis.internal
-  dbPassword:
-    valueFrom:
-      secretKeyRef:
-        name: app-secrets
-        key: db-password
-
-customBlock:
-  port: 8080
-  logPath:
-    valueFrom:
-      configMapKeyRef:
-        name: app-config
-        key: log-path
-
-topValueFrom:
-  valueFrom:
-    secretKeyRef:
-      name: top-secret
-      key: api-key
-
-simpleEnvVar: basic
-
-caseConventions:
-  camelCase: snake_case
+caseTests:
+  camelCase: camelCase
   camel_Snake_Case: camel_Snake_Case
   camel.Snake.Dot: camel.Snake.Dot
   snake_case: snake_case
@@ -39,72 +10,197 @@ caseConventions:
   PascalCase: PascalCase
   Train-Case: Train-Case
   mixedCASEValue: "mixedCASEValue"
+  non,.;alnum$!)*in%(+=@key&name: "non,.;alnum$!)*in%(+=@key&name"
+  $delimitersBeginEnd_: "$delimitersBeginEnd_"
   mMiXeD123: "MiXeD123 - not supported"
   spOngeBoB_CaSe: "spOngeBoB_Case - not supported"
   spOngeBoB-KeBaB-CaSe: "spOngeBoB-KeBaB-Case - not supported"
 
-edgeCases:
-  valueFromOnly:
-    valueFrom:
-      secretKeyRef:
-        name: edge-secret
-        key: key-one
-  plainString: "hello"
+simpleValue: simpleValue
+
+simpleMap:
+  stringValue: "hello"
   boolValue: false
   numberValue: 42
+  logLevel: debug
+  replicas: 3
+  useCache: true
 
-extraEdgeCases:
-  mapAndValue:
+simpleList:
+  - stringValue: "hello"
+  - boolValue: false
+  - numberValue: 42
+  - logLevel: debug
+  - replicas: 3
+  - useCache: true
+
+simpleValueFrom:
+  valueFrom:
+    secretKeyRef:
+      name: simpleValueFromName
+      key: simpleValueFromKey
+      optional: false
+
+multiValueFromMap:
+  loglevel:
     valueFrom:
       configMapKeyRef:
-        name: extra-config
-        key: map-key
-  justAnother: true
-  emptyString: ""
-  numericString: "007"
+        name: debug
+        key: multiValueFromMapLogLevel
+        optional: true
+  replicas:
+    valueFrom:
+      fieldRef:
+        apiVersion: multiValueFromMapReplicasApiVersion
+        fieldPath: multiValueFromMapReplicasFieldPath
+  useCache:
+    valueFrom:
+      resourceFieldRef:
+        containerName: multiValueFromMapUseCacheContainerName
+        divisor: multiValueFromMapUseCacheDivisor
+        resource: multiValueFromMapUseCacheResource
 
-deepBlock:
-  top: shouldBeIgnored
-  inner:
+multiValueFromList:
+  - loglevel:
+      valueFrom:
+        configMapKeyRef:
+          name: debug
+          key: multiValueFromListLogLevel
+          optional: true
+  - replicas:
+      valueFrom:
+        fieldRef:
+          apiVersion: multiValueFromListReplicasApiVersion
+          fieldPath: multiValueFromListReplicasFieldPath
+  - useCache:
+      valueFrom:
+        resourceFieldRef:
+          containerName: multiValueFromMapUseCacheContainerName
+          divisor: multiValueFromListUseCacheDivisor
+          resource: multiValueFromListUseCacheResource
+
+mixedMap:
+  stringValue: "hello"
+  loglevel:
+    valueFrom:
+      configMapKeyRef:
+        name: debug
+        key: mixedMapLogLevel
+        optional: true
+  boolValue: false
+  replicas:
+    valueFrom:
+      fieldRef:
+        apiVersion: mixedMapReplicasApiVersion
+        fieldPath: mixedMapReplicasFieldPath
+  useCache:
+    valueFrom:
+      resourceFieldRef:
+        containerName: mixedMapUseCacheContainerName
+        divisor: mixedMapUseCacheDivisor
+        resource: mixedMapUseCacheResource
+  numberValue: 42
+
+mixedList:
+  - stringValue: "hello"
+  - loglevel:
+      valueFrom:
+        configMapKeyRef:
+          name: debug
+          key: mixedListLogLevel
+          optional: true
+  - boolValue: false
+  - replicas:
+      valueFrom:
+        fieldRef:
+          apiVersion: mixedListReplicasApiVersion
+          fieldPath: mixedListReplicasFieldPath
+  - useCache:
+      valueFrom:
+        resourceFieldRef:
+          containerName: mixedListUseCacheContainerName
+          divisor: mixedListUseCacheDivisor
+          resource: mixedListUseCacheResource
+  - numberValue: 42
+
+edgeCases:
+  ignoreSubkeysMap:
+    validStringValue: "hello"
+    validBoolValue: false
+    validNumberValue: 42
+    validValueFrom:
+      valueFrom:
+        secretKeyRef:
+          name: validValueFromName
+          key: validValueFromKey
     valueFrom:
       secretKeyRef:
-        name: deep-secret
-        key: hidden
+        name: ignoreValueFrom
+        key: ignore
+    anyMap:
+      anyMapKey1: ignore
+      anyMapKey2: ignore
+      anyMapKey3: ignore
+    anyList:
+      - anyListEntry1: ignore
+      - anyListEntry2: ignore
+      - anyListEntry3: ignore
 
-someOuter:
-  someInner:
-    enabled: true
-    name: default
-    path: "/"
-    protocol: s3
-    attachments: true
-    backups: true
-
-    s3:
-      endpoint: https://s3.url
-      region: s3-region
-      accessKey:
+  ignoreSubkeysList:
+    - validStringValue: "hello"
+    - validBoolValue: false
+    - validNumberValue: 42
+    - validValueFrom:
         valueFrom:
+          secretKeyRef:
+            name: validValueFrom
+            key: validValueFrom
+    - ignoreValueFrom:
         secretKeyRef:
-          name: secret-s3
-          key: accessKey
-      secretKey:
-        valueFrom:
-          secretKeyRef:
-            name: secret-s3
-            key: secretKey
+          name: ignoreValueFrom
+          key: ignore
+    - ignoreAnyMap:
+        anyMapKey1: ignore
+        anyMapKey2: ignore
+        anyMapKey3: ignore
+    - ignoreAnyList:
+      - anyListEntry1: ignore
+      - anyListEntry2: ignore
+      - anyListEntry3: ignore
 
-    sftp:
-      host: localhost
-      port: 22
-      user:
-        valueFrom:
-          secretKeyRef:
-            name: secret-sftp
-            key: username
-      password:
-        valueFrom:
-          secretKeyRef:
-            name: secret-sftp
-            key: password
-      agent: false
+  innerTargets:
+    outer:
+      innerMap:
+        validStringValue: "hello"
+        validBoolValue: false
+        validNumberValue: 42
+        innerMap2:
+          endpoint: https://s3.url
+          region: s3-region
+          accessKey:
+            valueFrom:
+            secretKeyRef:
+              name: s3-secret
+              key: accessKey
+          secretKey:
+            valueFrom:
+              secretKeyRef:
+                name: s3-secret
+                key: secretKey
+      innerList:
+        - validStringValue: "hello"
+        - validBoolValue: false
+        - validNumberValue: 42
+        - innerList2:
+          - endpoint: https://s3.url
+          - region: s3-region
+          - accessKey:
+            valueFrom:
+              secretKeyRef:
+                name: s3-secret
+                key: accessKey
+          - secretKey:
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: secretKey
