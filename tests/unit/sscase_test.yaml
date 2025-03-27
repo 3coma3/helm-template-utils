@@ -5,7 +5,7 @@ tests:
   - it: sanity check
     asserts:
       - isNotNull:
-          path: envs
+          path: env
 
   - it: "SSCase - camelCase"
     asserts:
