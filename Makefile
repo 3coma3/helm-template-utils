@@ -1,3 +1,4 @@
+# Makefile
 SHELL := /bin/bash
 .SHELLFLAGS := -u -o pipefail -c
 
@@ -6,6 +7,7 @@ CHART_FILE := Chart.yaml
 TEMPLATE_FILE := templates/_util.tpl
 
 TEST_CHART := tests
+TEST_CHART_FILE := $(TEST_CHART)/$(CHART_FILE)
 TEST_UNITS := $(TEST_CHART)/unit
 TEST_VALUES := $(TEST_CHART)/values.yaml
 
@@ -21,7 +23,7 @@ test: test-clean deps
 
 unittest: test-clean deps
 	@echo "🔍 Running unit tests for helpers..."
-	@helm unittest $(TEST_CHART) -sf "$(TEST_UNITS)/*"
+	@helm unittest $(TEST_CHART) -qsf "$(TEST_UNITS)/*"
 
 test-clean:
 	@echo "🧹 Cleaning up test artifacts..."
@@ -42,13 +44,14 @@ define bump_version
 	@$(SHELL) $(SHELL_FLAGS) -c '\
 	IFS="." read -r major minor patch <<< "$(DIST_VERSION)"; \
 	case "$(1)" in \
-		major) ((major++, minor=0, patch=0)) ;; \
-		minor) ((minor++, patch=0)) ;; \
-		patch) ((patch++)) ;; \
+		major) (( major++, minor=0, patch=0 )) ;; \
+		minor) (( minor++, patch=0 )) ;; \
+		patch) (( patch++ )) ;; \
 	esac; \
 	new_version="$$major.$$minor.$$patch"; \
 	echo "✅ New version: $$new_version"; \
 	yq e -i ".version = \"$$new_version\"" $(CHART_FILE); \
+	yq e -i ".version = \"$$new_version\"" $(TEST_CHART_FILE); \
 	yq e -i ".dependencies[] |= select(.name == \"$(CHART_NAME)\") .version = \"$$new_version\"" $(TEST_CHART_FILE); \
 	echo -e "\n🔐 Unlocking GPG key..."; \
 	gpg --clearsign <<< "signing warmup" > /dev/null; \
