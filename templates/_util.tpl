@@ -65,11 +65,24 @@ maybe not worth it and leave it as "feature" */}}
 {{- end -}}
 
 {{- if $target -}}
-  {{- $target = ((and (kindIs "map" $target) (not (hasKey $target "valueFrom"))) | ternary $target (set (dict) "" $target) ) -}}
-  {{ range $k, $v := $target }}
-    {{- if or (not (kindIs "map" $v)) (hasKey $v "valueFrom") -}}
-- name: {{ (eq $k "") | ternary (trunc -1 $prefix) (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
-      {{- (and (kindIs "map" $v) (hasKey $v "valueFrom")) | ternary
+  {{- $scalars := list "string" "bool" "int" "float64" -}}
+
+  {{- if or (has (kindOf $target) $scalars) (and (kindIs "map" $target) (eq (len (keys $target)) 1) (hasKey $target "valueFrom")) -}}
+    {{- $target = set (dict) "" $target -}}
+  {{- end -}}
+
+  {{ range $k, $v := $target -}}
+    {{- if kindIs "slice" $target -}}
+        {{- $k = index (keys $v) 0 -}}
+        {{- $v = get $v $k -}}
+    {{- end -}}
+
+    {{- $kind := kindOf $v -}}
+
+    {{- if or (has $kind $scalars) (and (eq $kind "map") (eq (len (keys $v)) 1) (hasKey $v "valueFrom")) -}}
+
+- name: {{ (eq $k "") | ternary (trimSuffix "_" $prefix | default "_") (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
+      {{- and (eq $kind "map") (hasKey $v "valueFrom") | ternary
           (printf "%s\n" (toYaml $v | nindent 2))
           (printf "\n  value: %s\n" (quote $v))
       -}}
