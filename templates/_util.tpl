@@ -44,15 +44,24 @@ Behaviors
 - Uses util.SSCase internally, refer to that template for conversion rules
 */}}
 {{- define "util.toEnv" -}}
-{{- $target := dict -}}
+{{- $target := . -}}
 {{- $prefix := "" -}}
-{{- if kindIs "slice" . -}}
-  {{- $parent := index . 0 -}}
-  {{- $key := index . 1 -}}
-  {{- $target = ((hasKey $parent $key) | ternary (get $parent $key) ($parent)) -}}
+
+{{/* check edge case of passing a single argument pointing to a list of two
+elements where the first contains the second as a subkey?
+maybe not worth it and leave it as "feature" */}}
+
+{{- if (and (kindIs "slice" $target) (eq (len $target) 2)) -}}
+
+  {{/* determine target and prefix from argument */}}
+  {{- $parent := index $target 0 -}}
+  {{- $key := index $target 1 -}}
+  {{- if and (kindIs "map" $parent) (hasKey $parent $key) -}}
+    {{- $target = (get $parent $key) -}}
+  {{- else -}}
+    {{- $target = $parent -}}
+  {{- end -}}
   {{- $prefix = (printf "%s_" (include "util.SSCase" $key)) }}
-{{- else if kindIs "map" . -}}
-  {{- $target = . -}}
 {{- end -}}
 
 {{- if $target -}}
