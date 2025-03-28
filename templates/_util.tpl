@@ -1,3 +1,5 @@
+# _util.tpl
+
 {{/*
 Description
   Normalizes strings into SCREAMING_SNAKE_CASE
@@ -30,16 +32,17 @@ Usage
   {{ include "util.toEnv" (list parentKey "targetSubkey") }}
 
 Behaviors
-- Supports scalar and map targets
+- Supports scalar, valueFrom, list and map targets
   - scalars (string, bool, number) become quoted values
-  - maps generate multiple entries
-  - entries containing valueFrom are rendered properly
+  - list and maps generate multiple entries
+  - valueFrom entries are rendered properly
   - supports mixed scalar/valueFrom maps
+  - light typechecking on valueFrom (only check they have a single subkey)
 
 - Silently skips:
   - undefined and missing keys
-  - types other than scalars and maps
-  - mapped subkeys except valueFrom (it's not recursive)
+  - container subkeys except valueFrom (it's not recursive)
+  - malformed valueFrom entries
 
 - Uses util.SSCase internally, refer to that template for conversion rules
 */}}
