@@ -6,7 +6,7 @@
 {{- end -}}
 
 {{- define "util.leafKind" -}}
-{{- $scalars := list "string" "bool" "int" "float64" -}}
+{{- $scalars := list "bool" "int" "int64" "float64" "string" -}}
 {{- $kind := kindOf . -}}
 {{- if has $kind $scalars -}}
 {{- $kind -}}
