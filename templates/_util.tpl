@@ -48,10 +48,13 @@ Behaviors
 */}}
 
 
-{{- define "util.envLeaf" -}}
+{{- define "util.leafKind" -}}
 {{- $scalars := list "string" "bool" "int" "float64" -}}
-{{- if or (has (kindOf .) $scalars) (and (kindIs "map" .) (eq (len (keys .)) 1) (hasKey . "valueFrom")) -}}
-true
+{{- $kind := kindOf . -}}
+{{- if has $kind $scalars -}}
+{{- $kind -}}
+{{- else if and (eq $kind "map") (eq (len (keys .)) 1) (hasKey . "valueFrom") -}}
+valueFrom
 {{- end -}}
 {{- end -}}
 
@@ -72,15 +75,16 @@ true
 {{- if $target -}}
    {{- $targetIsSlice := kindIs "slice" $target -}}
 
-  {{ range $k, $v := empty (include "util.envLeaf" $target) | ternary $target (dict "" $target) -}}
+  {{ range $k, $v := empty (include "util.leafKind" $target) | ternary $target (dict "" $target) -}}
     {{- if $targetIsSlice -}}
         {{- $k = first (keys $v) -}}
         {{- $v = get $v $k -}}
     {{- end -}}
 
-    {{- if include "util.envLeaf" $v -}}
+    {{- $leafKind := include "util.leafKind" $v -}}
+    {{- if $leafKind -}}
 - name: {{ (printf "%s_%s" $prefix $k) | include "util.SSCase" | default "_" }}
-      {{- eq (kindOf $v) "map" | ternary
+      {{- eq $leafKind "valueFrom" | ternary
           (printf "%s\n" (toYaml $v | nindent 2))
           (printf "\n  value: %s\n" (quote $v))
       -}}
