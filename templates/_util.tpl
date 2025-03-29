@@ -75,7 +75,7 @@ valueFrom
 {{- if not (kindIs "invalid" $target) -}}
   {{- $targetIsSlice := kindIs "slice" $target -}}
 
-  {{- range $k, $v := empty (include "util.leafKind" $target) | ternary $target (dict "" $target) -}}
+  {{- range $k, $v := or (and (empty (include "util.leafKind" $target)) $target) (dict "" $target) -}}
     {{- if $targetIsSlice -}}
         {{- $k = first (keys $v) -}}
         {{- $v = get $v $k -}}
