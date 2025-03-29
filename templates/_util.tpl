@@ -39,7 +39,7 @@ valueFrom
     {{- end -}}
 
     {{- if $leafKind := include "util.leafKind" $v -}}
-- name: {{ or ((printf "%s_%s" $prefix $k) | include "util.SSCase") "_" }}
+- name: {{ or (cat $prefix "_" $k | include "util.SSCase") "_" }}
       {{- if eq $leafKind "valueFrom" -}}
         {{- printf "%s\n" (toYaml $v | nindent 2) -}}
       {{- else -}}
