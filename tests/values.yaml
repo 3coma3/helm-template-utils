@@ -179,6 +179,11 @@ edgeCases:
         - anyListEntry1: ignore
         - anyListEntry2: ignore
         - anyListEntry3: ignore
+    - "invalid non-key/value entry should be ignored"
+    - false
+    -
+      - "invalid list of lists"
+      - "invalid list of lists"
 
   innerTargets:
     outer:

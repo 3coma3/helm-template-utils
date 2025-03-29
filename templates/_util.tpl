@@ -5,12 +5,18 @@
 {{- trimAll "_" $normalize | snakecase | upper -}}
 {{- end -}}
 
+{{- define "util.isKeyValue" -}}
+{{- if and (kindIs "map" .) (eq (len (keys .)) 1) -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "util.leafKind" -}}
 {{- $scalars := list "bool" "int" "int64" "float64" "string" -}}
 {{- $kind := kindOf . -}}
 {{- if has $kind $scalars -}}
 {{- $kind -}}
-{{- else if and (eq $kind "map") (eq (len (keys .)) 1) (hasKey . "valueFrom") -}}
+{{- else if and (include "util.isKeyValue" .) (hasKey . "valueFrom") -}}
 valueFrom
 {{- end -}}
 {{- end -}}
@@ -34,8 +40,9 @@ valueFrom
 
   {{- range $k, $v := or (and (empty (include "util.leafKind" $target)) $target) (dict "" $target) -}}
     {{- if $targetIsSlice -}}
-        {{- $k = first (keys $v) -}}
-        {{- $v = get $v $k -}}
+      {{- if not (include "util.isKeyValue" $v) -}}{{- continue -}}{{- end -}}
+      {{- $k = first (keys $v) -}}
+      {{- $v = get $v $k -}}
     {{- end -}}
 
     {{- if $leafKind := include "util.leafKind" $v -}}
