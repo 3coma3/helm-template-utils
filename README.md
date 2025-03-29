@@ -54,22 +54,22 @@ Maps values to Kubernetes `EnvVar` fields
   - scalars become single values
   - list and maps generate multiple entries
   - valueFrom entries are rendered properly
-  - light typechecking on valueFrom (only check they have a single subkey)
+  - light typechecking on valueFrom (via [`util.leafKind`](#-utilleafkind))
   - supports collections with mixed scalar/valueFrom entries
 - Silently filters out:
   - undefined and missing keys
   - container subkeys except valueFrom (it's not recursive)
   - malformed valueFrom entries
-
+  - list entries that aren't key/value maps
+  
 - Optional prefixing for generated variable names:
   - A second argument will always be used as the prefix
   - If the prefix exists as a subkey in the target, it will *become* the target for processing
-- Uses [`util.SSCase`](#utilsscase) for name and prefix formatting
+- Uses [`util.SSCase`](#-utilsscase) for name and prefix formatting
 
 **Future enhancements**
 
-- configurable strictness
-- extra/optional typechecks on valueFrom
+- configurable strictness (enable extra leafKind typechecks, exit on undefined/malformed entries, etc)
 - regex filters for keys or values
 
 
@@ -85,6 +85,10 @@ This is used as a `toEnv`  helper that checks the kind of its context and return
 - A *well-formed* `valueFrom` will render the string "valueFrom"
 
 "Well-formed" means for now a trivial check that we have a map with a single subkey named "valueFrom", no comprehensive guarantees are issued.
+
+**Future enhancements**
+
+- optional extra typechecking on valueFrom
 
 
 
