@@ -2,12 +2,12 @@ apiVersion: v1
 entries:
   helm-template-utils:
   - apiVersion: v2
-    created: "2025-03-28T18:29:03.649820976Z"
+    created: "2025-03-29T10:49:50.392179949Z"
     description: Reusable helper templates for Kubernetes manifests
-    digest: 6a5d90f75fedb74e85df7fc35cc387499ae8546ba6ef609ad919154913b1862d
+    digest: c90c4dbcc6a7b8b27d8486a0e776a7dbc21b4fe397229f6aaf24c94cc6da14af
     name: helm-template-utils
     type: library
     urls:
-    - https://3coma3.github.io/helm-template-utils/helm-template-utils-0.2.0.tgz
-    version: 0.2.0
-generated: "2025-03-28T18:29:03.649421546Z"
+    - https://3coma3.github.io/helm-template-utils/helm-template-utils-0.2.1.tgz
+    version: 0.2.1
+generated: "2025-03-29T10:49:50.391751466Z"
