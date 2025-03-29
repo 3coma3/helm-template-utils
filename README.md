@@ -11,6 +11,7 @@ Reusable helper templates for Kubernetes manifests
 ### 📦 `util.SSCase`
 
 **Description**
+
 Normalizes strings into SCREAMING_SNAKE_CASE (useful for `EnvVar` name formatting)
 
 **Usage**
