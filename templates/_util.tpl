@@ -42,8 +42,10 @@ valueFrom
 - name: {{ or ((printf "%s_%s" $prefix $k) | include "util.SSCase") "_" }}
       {{- if eq $leafKind "valueFrom" -}}
         {{- printf "%s\n" (toYaml $v | nindent 2) -}}
+      {{- else if eq $leafKind "string" -}}
+        {{- printf "\n  value: %v\n" (quote $v) -}}
       {{- else -}}
-        {{- printf "\n  value: %s\n" (quote $v) -}}
+        {{- printf "\n  value: %v\n" $v -}}
       {{- end -}}
     {{- end -}}
   {{ end }}

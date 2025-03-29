@@ -46,12 +46,12 @@ tests:
           path: envs.simple-map[?(@.name=="BOOL_VALUE")]
           value:
             name: BOOL_VALUE
-            value: "false"
+            value: false
       - equal:
           path: envs.simple-map[?(@.name=="NUMBER_VALUE")]
           value:
             name: NUMBER_VALUE
-            value: "42"
+            value: 42
       - equal:
           path: envs.simple-map[?(@.name=="LOG_LEVEL")]
           value:
@@ -61,12 +61,12 @@ tests:
           path: envs.simple-map[?(@.name=="REPLICAS")]
           value:
             name: REPLICAS
-            value: "3"
+            value: 3
       - equal:
           path: envs.simple-map[?(@.name=="USE_CACHE")]
           value:
             name: USE_CACHE
-            value: "true"
+            value: true
 
   - it: simple-map-name-implicit should prefix all keys from .Values.simpleMap with SIMPLE_MAP
     asserts:
@@ -82,12 +82,12 @@ tests:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_BOOL_VALUE")]
           value:
             name: SIMPLE_MAP_BOOL_VALUE
-            value: "false"
+            value: false
       - equal:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_NUMBER_VALUE")]
           value:
             name: SIMPLE_MAP_NUMBER_VALUE
-            value: "42"
+            value: 42
       - equal:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_LOG_LEVEL")]
           value:
@@ -97,12 +97,12 @@ tests:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_REPLICAS")]
           value:
             name: SIMPLE_MAP_REPLICAS
-            value: "3"
+            value: 3
       - equal:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_USE_CACHE")]
           value:
             name: SIMPLE_MAP_USE_CACHE
-            value: "true"
+            value: true
 
   - it: simple-map-name-explicit should prefix all keys from .Values.simpleMap with CUSTOM_PREFIX
     asserts:
@@ -118,12 +118,12 @@ tests:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_BOOL_VALUE")]
           value:
             name: CUSTOM_PREFIX_BOOL_VALUE
-            value: "false"
+            value: false
       - equal:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_NUMBER_VALUE")]
           value:
             name: CUSTOM_PREFIX_NUMBER_VALUE
-            value: "42"
+            value: 42
       - equal:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_LOG_LEVEL")]
           value:
@@ -133,12 +133,12 @@ tests:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_REPLICAS")]
           value:
             name: CUSTOM_PREFIX_REPLICAS
-            value: "3"
+            value: 3
       - equal:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_USE_CACHE")]
           value:
             name: CUSTOM_PREFIX_USE_CACHE
-            value: "true"
+            value: true
 
   - it: simple-list should include all keys and values from .Values.simpleList
     asserts:
@@ -148,15 +148,15 @@ tests:
             - name: STRING_VALUE
               value: "hello"
             - name: BOOL_VALUE
-              value: "false"
+              value: false
             - name: NUMBER_VALUE
-              value: "42"
+              value: 42
             - name: LOG_LEVEL
               value: "debug"
             - name: REPLICAS
-              value: "3"
+              value: 3
             - name: USE_CACHE
-              value: "true"
+              value: true
 
   - it: simple-list-name-implicit should prefix all keys from .Values.simpleList with SIMPLE_LIST
     asserts:
@@ -166,15 +166,15 @@ tests:
             - name: SIMPLE_LIST_STRING_VALUE
               value: "hello"
             - name: SIMPLE_LIST_BOOL_VALUE
-              value: "false"
+              value: false
             - name: SIMPLE_LIST_NUMBER_VALUE
-              value: "42"
+              value: 42
             - name: SIMPLE_LIST_LOG_LEVEL
               value: "debug"
             - name: SIMPLE_LIST_REPLICAS
-              value: "3"
+              value: 3
             - name: SIMPLE_LIST_USE_CACHE
-              value: "true"
+              value: true
 
   - it: simple-list-name-explicit should prefix all keys from .Values.simpleList with CUSTOM_PREFIX
     asserts:
@@ -182,17 +182,17 @@ tests:
           path: envs.simple-list-name-explicit
           value:
             - name: CUSTOM_PREFIX_BOOL_VALUE
-              value: "false"
+              value: false
             - name: CUSTOM_PREFIX_LOG_LEVEL
               value: "debug"
             - name: CUSTOM_PREFIX_NUMBER_VALUE
-              value: "42"
+              value: 42
             - name: CUSTOM_PREFIX_REPLICAS
-              value: "3"
+              value: 3
             - name: CUSTOM_PREFIX_STRING_VALUE
               value: "hello"
             - name: CUSTOM_PREFIX_USE_CACHE
-              value: "true"
+              value: true
 
   - it: simple-valuefrom should include an unnamed valueFrom map
     asserts:
@@ -308,7 +308,7 @@ tests:
           path: envs.mixed-map[?(@.name=="BOOL_VALUE")]
           value:
             name: BOOL_VALUE
-            value: "false"
+            value: false
       - equal:
           path: envs.mixed-map[?(@.name=="REPLICAS")]
           value:
@@ -330,7 +330,7 @@ tests:
           path: envs.mixed-map[?(@.name=="NUMBER_VALUE")]
           value:
             name: NUMBER_VALUE
-            value: "42"
+            value: 42
 
   - it: mixed-list should include all scalars and valueFrom maps from .Values.mixedList
     asserts:
@@ -346,7 +346,7 @@ tests:
                   name: debug
                   optional: true
             - name: BOOL_VALUE
-              value: "false"
+              value: false
             - name: REPLICAS
               valueFrom:
                 fieldRef:
@@ -359,8 +359,7 @@ tests:
                   divisor: mixedListUseCacheDivisor
                   resource: mixedListUseCacheResource
             - name: NUMBER_VALUE
-              value: "42"
-
+              value: 42
 
   - it: edge-case-deep-sub-map should include all scalars and valueFrom maps from .Values.edgeCases.innerTargets.outer.innerMap
     asserts:
@@ -376,12 +375,12 @@ tests:
           path: envs.edge-case-deep-sub-map[?(@.name=="INNER_MAP_VALID_BOOL_VALUE")]
           value:
             name: INNER_MAP_VALID_BOOL_VALUE
-            value: "false"
+            value: false
       - equal:
           path: envs.edge-case-deep-sub-map[?(@.name=="INNER_MAP_VALID_NUMBER_VALUE")]
           value:
             name: INNER_MAP_VALID_NUMBER_VALUE
-            value: "42"
+            value: 42
 
   - it: edge-case-deep-sub-list should include all scalars and valueFrom maps from .Values.edgeCases.innerTargets.outer.innerList
     asserts:
@@ -391,9 +390,9 @@ tests:
             - name: INNER_LIST_VALID_STRING_VALUE
               value: "hello"
             - name: INNER_LIST_VALID_BOOL_VALUE
-              value: "false"
+              value: false
             - name: INNER_LIST_VALID_NUMBER_VALUE
-              value: "42"
+              value: 42
 
   - it: edge-case-ignore-subkeys-map should include only scalars and valueFrom maps from .Values.edgeCases.ignoreSubkeysMap
     asserts:
@@ -409,12 +408,12 @@ tests:
           path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_BOOL_VALUE")]
           value:
             name: IGNORE_SUBKEYS_MAP_VALID_BOOL_VALUE
-            value: "false"
+            value: false
       - equal:
           path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_NUMBER_VALUE")]
           value:
             name: IGNORE_SUBKEYS_MAP_VALID_NUMBER_VALUE
-            value: "42"
+            value: 42
       - equal:
           path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_VALUE_FROM")]
           value:
@@ -432,9 +431,9 @@ tests:
             - name: IGNORE_SUBKEYS_LIST_VALID_STRING_VALUE
               value: "hello"
             - name: IGNORE_SUBKEYS_LIST_VALID_BOOL_VALUE
-              value: "false"
+              value: false
             - name: IGNORE_SUBKEYS_LIST_VALID_NUMBER_VALUE
-              value: "42"
+              value: 42
             - name: IGNORE_SUBKEYS_LIST_VALID_VALUE_FROM
               valueFrom:
                 secretKeyRef:
