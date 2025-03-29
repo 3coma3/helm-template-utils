@@ -1,8 +1,8 @@
 apiVersion: v2
 name: helm-template-utils-tests
 description: "Tests for helm-template-utils"
-version: 0.2.2
+version: 0.2.3
 dependencies:
   - name: helm-template-utils
-    version: 0.2.2
+    version: 0.2.3
     repository: file://..
