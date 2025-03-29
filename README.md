@@ -51,7 +51,7 @@ Maps values to Kubernetes `EnvVar` fields
 **Behaviors**
 
 - Supports scalar, valueFrom, list and map targets:
-  - strings, booleans and numbers become single values
+  - scalars become single values
   - list and maps generate multiple entries
   - valueFrom entries are rendered properly
   - light typechecking on valueFrom (only check they have a single subkey)
@@ -81,8 +81,8 @@ Maps values to Kubernetes `EnvVar` fields
 
 This is used as a `toEnv`  helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or nil otherwise.
 
-- A scalar (`string`, `bool`, `int`, `float64`) will render its kind
-- A *well-formed* `valueFrom` will render "valueFrom"
+- A scalar ( `bool`, `int`, `int64` ,`float64` or `string`) will render its kind
+- A *well-formed* `valueFrom` will render the string "valueFrom"
 
 "Well-formed" means for now a trivial check that we have a map with a single subkey named "valueFrom", no comprehensive guarantees are issued.
 
