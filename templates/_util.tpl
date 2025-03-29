@@ -1,52 +1,9 @@
 # _util.tpl
-
-{{/*
-Description
-  Normalizes strings into SCREAMING_SNAKE_CASE
-
-Usage
-  {{ include "util.SSCase" string }}
-
-Behaviors
-- converts non-alphanumeric to (deduplicated) underscores
-- filters through snakecase | upper
-*/}}
 {{- define "util.SSCase" -}}
 {{- $normalize := regexReplaceAll "[^[:alnum:]]" . "_" -}}
 {{- $normalize = regexReplaceAll "_+" $normalize "_" }}
 {{- trimAll "_" $normalize | snakecase | upper -}}
 {{- end -}}
-
-{{/*
-Description
-  Maps values to Kubernetes EnvVar fields
-
-Usage
-- Format a key, no prefix is added to variable names
-  {{ include "util.toEnv" targetKey }}
-
-- Format a key and add a custom prefix to variable names
-  {{ include "util.toEnv" (list targetKey "prefix") }}
-
-- Format a key and use its name as prefix
-  {{ include "util.toEnv" (list parentKey "targetSubkey") }}
-
-Behaviors
-- Supports scalar, valueFrom, list and map targets
-  - scalars (string, bool, number) become quoted values
-  - list and maps generate multiple entries
-  - valueFrom entries are rendered properly
-  - supports mixed scalar/valueFrom maps
-  - light typechecking on valueFrom (only check they have a single subkey)
-
-- Silently skips:
-  - undefined and missing keys
-  - container subkeys except valueFrom (it's not recursive)
-  - malformed valueFrom entries
-
-- Uses util.SSCase internally, refer to that template for conversion rules
-*/}}
-
 
 {{- define "util.leafKind" -}}
 {{- $scalars := list "string" "bool" "int" "float64" -}}
