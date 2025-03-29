@@ -2,4 +2,4 @@ apiVersion: v2
 type: library
 name: helm-template-utils
 description: Reusable helper templates for Kubernetes manifests
-version: 0.2.1
+version: 0.2.2
