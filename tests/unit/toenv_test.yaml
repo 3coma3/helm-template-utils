@@ -34,57 +34,111 @@ tests:
 
   - it: simple-map should include all keys and values from .Values.simpleMap
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.simple-map
+          count: 6
+      - equal:
+          path: envs.simple-map[?(@.name=="STRING_VALUE")]
           value:
-            - name: BOOL_VALUE
-              value: "false"
-            - name: LOG_LEVEL
-              value: "debug"
-            - name: NUMBER_VALUE
-              value: "42"
-            - name: REPLICAS
-              value: "3"
-            - name: STRING_VALUE
-              value: "hello"
-            - name: USE_CACHE
-              value: "true"
+            name: STRING_VALUE
+            value: "hello"
+      - equal:
+          path: envs.simple-map[?(@.name=="BOOL_VALUE")]
+          value:
+            name: BOOL_VALUE
+            value: "false"
+      - equal:
+          path: envs.simple-map[?(@.name=="NUMBER_VALUE")]
+          value:
+            name: NUMBER_VALUE
+            value: "42"
+      - equal:
+          path: envs.simple-map[?(@.name=="LOG_LEVEL")]
+          value:
+            name: LOG_LEVEL
+            value: "debug"
+      - equal:
+          path: envs.simple-map[?(@.name=="REPLICAS")]
+          value:
+            name: REPLICAS
+            value: "3"
+      - equal:
+          path: envs.simple-map[?(@.name=="USE_CACHE")]
+          value:
+            name: USE_CACHE
+            value: "true"
 
   - it: simple-map-name-implicit should prefix all keys from .Values.simpleMap with SIMPLE_MAP
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.simple-map-name-implicit
+          count: 6
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_STRING_VALUE")]
           value:
-            - name: SIMPLE_MAP_BOOL_VALUE
-              value: "false"
-            - name: SIMPLE_MAP_LOG_LEVEL
-              value: "debug"
-            - name: SIMPLE_MAP_NUMBER_VALUE
-              value: "42"
-            - name: SIMPLE_MAP_REPLICAS
-              value: "3"
-            - name: SIMPLE_MAP_STRING_VALUE
-              value: "hello"
-            - name: SIMPLE_MAP_USE_CACHE
-              value: "true"
+            name: SIMPLE_MAP_STRING_VALUE
+            value: "hello"
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_BOOL_VALUE")]
+          value:
+            name: SIMPLE_MAP_BOOL_VALUE
+            value: "false"
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_NUMBER_VALUE")]
+          value:
+            name: SIMPLE_MAP_NUMBER_VALUE
+            value: "42"
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_LOG_LEVEL")]
+          value:
+            name: SIMPLE_MAP_LOG_LEVEL
+            value: "debug"
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_REPLICAS")]
+          value:
+            name: SIMPLE_MAP_REPLICAS
+            value: "3"
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_USE_CACHE")]
+          value:
+            name: SIMPLE_MAP_USE_CACHE
+            value: "true"
 
   - it: simple-map-name-explicit should prefix all keys from .Values.simpleMap with CUSTOM_PREFIX
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.simple-map-name-explicit
+          count: 6
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_STRING_VALUE")]
           value:
-            - name: CUSTOM_PREFIX_BOOL_VALUE
-              value: "false"
-            - name: CUSTOM_PREFIX_LOG_LEVEL
-              value: "debug"
-            - name: CUSTOM_PREFIX_NUMBER_VALUE
-              value: "42"
-            - name: CUSTOM_PREFIX_REPLICAS
-              value: "3"
-            - name: CUSTOM_PREFIX_STRING_VALUE
-              value: "hello"
-            - name: CUSTOM_PREFIX_USE_CACHE
-              value: "true"
+            name: CUSTOM_PREFIX_STRING_VALUE
+            value: "hello"
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_BOOL_VALUE")]
+          value:
+            name: CUSTOM_PREFIX_BOOL_VALUE
+            value: "false"
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_NUMBER_VALUE")]
+          value:
+            name: CUSTOM_PREFIX_NUMBER_VALUE
+            value: "42"
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_LOG_LEVEL")]
+          value:
+            name: CUSTOM_PREFIX_LOG_LEVEL
+            value: "debug"
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_REPLICAS")]
+          value:
+            name: CUSTOM_PREFIX_REPLICAS
+            value: "3"
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_USE_CACHE")]
+          value:
+            name: CUSTOM_PREFIX_USE_CACHE
+            value: "true"
 
   - it: simple-list should include all keys and values from .Values.simpleList
     asserts:
@@ -178,26 +232,35 @@ tests:
 
   - it: multi-valuefrom-map should include all valueFrom maps from .Values.multiValueFromMap
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.multi-valuefrom-map
+          count: 3
+      - equal:
+          path: envs.multi-valuefrom-map[?(@.name=="LOGLEVEL")]
           value:
-            - name: LOGLEVEL
-              valueFrom:
-                configMapKeyRef:
-                  key: multiValueFromMapLogLevel
-                  name: debug
-                  optional: true
-            - name: REPLICAS
-              valueFrom:
-                fieldRef:
-                  apiVersion: multiValueFromMapReplicasApiVersion
-                  fieldPath: multiValueFromMapReplicasFieldPath
-            - name: USE_CACHE
-              valueFrom:
-                resourceFieldRef:
-                  containerName: multiValueFromMapUseCacheContainerName
-                  divisor: multiValueFromMapUseCacheDivisor
-                  resource: multiValueFromMapUseCacheResource
+            name: LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: multiValueFromMapLogLevel
+                name: debug
+                optional: true
+      - equal:
+          path: envs.multi-valuefrom-map[?(@.name=="REPLICAS")]
+          value:
+            name: REPLICAS
+            valueFrom:
+              fieldRef:
+                apiVersion: multiValueFromMapReplicasApiVersion
+                fieldPath: multiValueFromMapReplicasFieldPath
+      - equal:
+          path: envs.multi-valuefrom-map[?(@.name=="USE_CACHE")]
+          value:
+            name: USE_CACHE
+            valueFrom:
+              resourceFieldRef:
+                containerName: multiValueFromMapUseCacheContainerName
+                divisor: multiValueFromMapUseCacheDivisor
+                resource: multiValueFromMapUseCacheResource
 
   - it: multi-valuefrom-list should include all valueFrom maps from .Values.multiValueFromList
     asserts:
@@ -224,32 +287,50 @@ tests:
 
   - it: mixed-map should include all scalars and valueFrom maps from .Values.mixedMap
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.mixed-map
+          count: 6
+      - equal:
+          path: envs.mixed-map[?(@.name=="STRING_VALUE")]
           value:
-            - name: BOOL_VALUE
-              value: "false"
-            - name: LOGLEVEL
-              valueFrom:
-                configMapKeyRef:
-                  key: mixedMapLogLevel
-                  name: debug
-                  optional: true
-            - name: NUMBER_VALUE
-              value: "42"
-            - name: REPLICAS
-              valueFrom:
-                fieldRef:
-                  apiVersion: mixedMapReplicasApiVersion
-                  fieldPath: mixedMapReplicasFieldPath
-            - name: STRING_VALUE
-              value: "hello"
-            - name: USE_CACHE
-              valueFrom:
-                resourceFieldRef:
-                  containerName: mixedMapUseCacheContainerName
-                  divisor: mixedMapUseCacheDivisor
-                  resource: mixedMapUseCacheResource
+            name: STRING_VALUE
+            value: "hello"
+      - equal:
+          path: envs.mixed-map[?(@.name=="LOGLEVEL")]
+          value:
+            name: LOGLEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: mixedMapLogLevel
+                name: debug
+                optional: true
+      - equal:
+          path: envs.mixed-map[?(@.name=="BOOL_VALUE")]
+          value:
+            name: BOOL_VALUE
+            value: "false"
+      - equal:
+          path: envs.mixed-map[?(@.name=="REPLICAS")]
+          value:
+            name: REPLICAS
+            valueFrom:
+              fieldRef:
+                apiVersion: mixedMapReplicasApiVersion
+                fieldPath: mixedMapReplicasFieldPath
+      - equal:
+          path: envs.mixed-map[?(@.name=="USE_CACHE")]
+          value:
+            name: USE_CACHE
+            valueFrom:
+              resourceFieldRef:
+                containerName: mixedMapUseCacheContainerName
+                divisor: mixedMapUseCacheDivisor
+                resource: mixedMapUseCacheResource
+      - equal:
+          path: envs.mixed-map[?(@.name=="NUMBER_VALUE")]
+          value:
+            name: NUMBER_VALUE
+            value: "42"
 
   - it: mixed-list should include all scalars and valueFrom maps from .Values.mixedList
     asserts:
@@ -280,17 +361,27 @@ tests:
             - name: NUMBER_VALUE
               value: "42"
 
+
   - it: edge-case-deep-sub-map should include all scalars and valueFrom maps from .Values.edgeCases.innerTargets.outer.innerMap
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.edge-case-deep-sub-map
+          count: 3
+      - equal:
+          path: envs.edge-case-deep-sub-map[?(@.name=="INNER_MAP_VALID_STRING_VALUE")]
           value:
-            - name: INNER_MAP_VALID_BOOL_VALUE
-              value: "false"
-            - name: INNER_MAP_VALID_NUMBER_VALUE
-              value: "42"
-            - name: INNER_MAP_VALID_STRING_VALUE
-              value: "hello"
+            name: INNER_MAP_VALID_STRING_VALUE
+            value: "hello"
+      - equal:
+          path: envs.edge-case-deep-sub-map[?(@.name=="INNER_MAP_VALID_BOOL_VALUE")]
+          value:
+            name: INNER_MAP_VALID_BOOL_VALUE
+            value: "false"
+      - equal:
+          path: envs.edge-case-deep-sub-map[?(@.name=="INNER_MAP_VALID_NUMBER_VALUE")]
+          value:
+            name: INNER_MAP_VALID_NUMBER_VALUE
+            value: "42"
 
   - it: edge-case-deep-sub-list should include all scalars and valueFrom maps from .Values.edgeCases.innerTargets.outer.innerList
     asserts:
@@ -306,20 +397,32 @@ tests:
 
   - it: edge-case-ignore-subkeys-map should include only scalars and valueFrom maps from .Values.edgeCases.ignoreSubkeysMap
     asserts:
-      - equal:
+      - lengthEqual:
           path: envs.edge-case-ignore-subkeys-map
+          count: 4
+      - equal:
+          path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_STRING_VALUE")]
           value:
-            - name: IGNORE_SUBKEYS_MAP_VALID_BOOL_VALUE
-              value: "false"
-            - name: IGNORE_SUBKEYS_MAP_VALID_NUMBER_VALUE
-              value: "42"
-            - name: IGNORE_SUBKEYS_MAP_VALID_STRING_VALUE
-              value: "hello"
-            - name: IGNORE_SUBKEYS_MAP_VALID_VALUE_FROM
-              valueFrom:
-                secretKeyRef:
-                  key: validValueFromKey
-                  name: validValueFromName
+            name: IGNORE_SUBKEYS_MAP_VALID_STRING_VALUE
+            value: "hello"
+      - equal:
+          path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_BOOL_VALUE")]
+          value:
+            name: IGNORE_SUBKEYS_MAP_VALID_BOOL_VALUE
+            value: "false"
+      - equal:
+          path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_NUMBER_VALUE")]
+          value:
+            name: IGNORE_SUBKEYS_MAP_VALID_NUMBER_VALUE
+            value: "42"
+      - equal:
+          path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_VALUE_FROM")]
+          value:
+            name: IGNORE_SUBKEYS_MAP_VALID_VALUE_FROM
+            valueFrom:
+              secretKeyRef:
+                key: validValueFromKey
+                name: validValueFromName
 
   - it: edge-case-ignore-subkeys-list should include only scalars and valueFrom maps from .Values.edgeCases.ignoreSubkeysList
     asserts:
