@@ -46,46 +46,41 @@ Behaviors
 
 - Uses util.SSCase internally, refer to that template for conversion rules
 */}}
+
+
+{{- define "util.envLeaf" -}}
+{{- $scalars := list "string" "bool" "int" "float64" -}}
+{{- if or (has (kindOf .) $scalars) (and (kindIs "map" .) (eq (len (keys .)) 1) (hasKey . "valueFrom")) -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "util.toEnv" -}}
 {{- $target := . -}}
 {{- $prefix := "" -}}
 
-{{/* check edge case of passing a single argument pointing to a list of two
-elements where the first contains the second as a subkey?
-maybe not worth it and leave it as "feature" */}}
+{{/* check edge case of accidentally passing a value that looks like this? */}}
+{{- if and (kindIs "slice" .) (eq (len .) 2) (kindIs "string" (last .)) -}}
+  {{- $target = first . -}}
+  {{- $prefix = last . -}}
 
-{{- if (and (kindIs "slice" $target) (eq (len $target) 2)) -}}
-
-  {{/* determine target and prefix from argument */}}
-  {{- $parent := index $target 0 -}}
-  {{- $key := index $target 1 -}}
-  {{- if and (kindIs "map" $parent) (hasKey $parent $key) -}}
-    {{- $target = (get $parent $key) -}}
-  {{- else -}}
-    {{- $target = $parent -}}
+  {{- if kindIs "map" $target -}}
+    {{- $target = or (get $target $prefix) $target -}}
   {{- end -}}
-  {{- $prefix = (printf "%s_" (include "util.SSCase" $key)) }}
 {{- end -}}
 
 {{- if $target -}}
-  {{- $scalars := list "string" "bool" "int" "float64" -}}
+   {{- $targetIsSlice := kindIs "slice" $target -}}
 
-  {{- if or (has (kindOf $target) $scalars) (and (kindIs "map" $target) (eq (len (keys $target)) 1) (hasKey $target "valueFrom")) -}}
-    {{- $target = set (dict) "" $target -}}
-  {{- end -}}
-
-  {{ range $k, $v := $target -}}
-    {{- if kindIs "slice" $target -}}
-        {{- $k = index (keys $v) 0 -}}
+  {{ range $k, $v := empty (include "util.envLeaf" $target) | ternary $target (dict "" $target) -}}
+    {{- if $targetIsSlice -}}
+        {{- $k = first (keys $v) -}}
         {{- $v = get $v $k -}}
     {{- end -}}
 
-    {{- $kind := kindOf $v -}}
-
-    {{- if or (has $kind $scalars) (and (eq $kind "map") (eq (len (keys $v)) 1) (hasKey $v "valueFrom")) -}}
-
-- name: {{ (eq $k "") | ternary (trimSuffix "_" $prefix | default "_") (printf "%s%s" $prefix (include "util.SSCase" $k)) }}
-      {{- and (eq $kind "map") (hasKey $v "valueFrom") | ternary
+    {{- if include "util.envLeaf" $v -}}
+- name: {{ (printf "%s_%s" $prefix $k) | include "util.SSCase" | default "_" }}
+      {{- eq (kindOf $v) "map" | ternary
           (printf "%s\n" (toYaml $v | nindent 2))
           (printf "\n  value: %s\n" (quote $v))
       -}}
