@@ -72,7 +72,6 @@ valueFrom
   {{- end -}}
 {{- end -}}
 
-
 {{- if not (kindIs "invalid" $target) -}}
   {{- $targetIsSlice := kindIs "slice" $target -}}
 
@@ -82,13 +81,13 @@ valueFrom
         {{- $v = get $v $k -}}
     {{- end -}}
 
-    {{- $leafKind := include "util.leafKind" $v -}}
-    {{- if $leafKind -}}
-- name: {{ (printf "%s_%s" $prefix $k) | include "util.SSCase" | default "_" }}
-      {{- eq $leafKind "valueFrom" | ternary
-          (printf "%s\n" (toYaml $v | nindent 2))
-          (printf "\n  value: %s\n" (quote $v))
-      -}}
+    {{- if $leafKind := include "util.leafKind" $v -}}
+- name: {{ or ((printf "%s_%s" $prefix $k) | include "util.SSCase") "_" }}
+      {{- if eq $leafKind "valueFrom" -}}
+        {{- printf "%s\n" (toYaml $v | nindent 2) -}}
+      {{- else -}}
+        {{- printf "\n  value: %s\n" (quote $v) -}}
+      {{- end -}}
     {{- end -}}
   {{ end }}
 {{- end -}}
