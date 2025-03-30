@@ -8,7 +8,7 @@ envs:
   simple-map-name-explicit: {{ include "util.toEnv" (list .Values.simpleMap "customPrefix") | nindent 4 }}
   simple-list: {{ include "util.toEnv" .Values.simpleList | nindent 4 }}
   simple-list-name-implicit: {{ include "util.toEnv" (list .Values "simpleList") | nindent 4 }}
-  simple-list-name-explicit: {{ include "util.toEnv" (list .Values.simpleMap "customPrefix") | nindent 4 }}
+  simple-list-name-explicit: {{ include "util.toEnv" (list .Values.simpleList "customPrefix") | nindent 4 }}
   simple-valuefrom: {{ include "util.toEnv" .Values.simpleValueFrom | nindent 4 }}
   simple-valuefrom-name-implicit: {{ include "util.toEnv" (list .Values "simpleValueFrom") | nindent 4 }}
   simple-valuefrom-name-explicit: {{ include "util.toEnv" (list .Values.simpleValueFrom "customPrefix") | nindent 4 }}

@@ -181,16 +181,16 @@ tests:
       - equal:
           path: envs.simple-list-name-explicit
           value:
-            - name: CUSTOM_PREFIX_BOOL_VALUE
-              value: false
-            - name: CUSTOM_PREFIX_LOG_LEVEL
-              value: "debug"
-            - name: CUSTOM_PREFIX_NUMBER_VALUE
-              value: 42
-            - name: CUSTOM_PREFIX_REPLICAS
-              value: 3
             - name: CUSTOM_PREFIX_STRING_VALUE
               value: "hello"
+            - name: CUSTOM_PREFIX_BOOL_VALUE
+              value: false
+            - name: CUSTOM_PREFIX_NUMBER_VALUE
+              value: 42
+            - name: CUSTOM_PREFIX_LOG_LEVEL
+              value: "debug"
+            - name: CUSTOM_PREFIX_REPLICAS
+              value: 3
             - name: CUSTOM_PREFIX_USE_CACHE
               value: true
 
