@@ -36,12 +36,17 @@ tests:
     asserts:
       - lengthEqual:
           path: envs.simple-map
-          count: 6
+          count: 7
       - equal:
           path: envs.simple-map[?(@.name=="STRING_VALUE")]
           value:
             name: STRING_VALUE
             value: "hello"
+      - equal:
+          path: envs.simple-map[?(@.name=="UNQUOTED_STRING_VALUE")]
+          value:
+            name: UNQUOTED_STRING_VALUE
+            value: "this is an unquoted String"
       - equal:
           path: envs.simple-map[?(@.name=="BOOL_VALUE")]
           value:
@@ -72,12 +77,17 @@ tests:
     asserts:
       - lengthEqual:
           path: envs.simple-map-name-implicit
-          count: 6
+          count: 7
       - equal:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_STRING_VALUE")]
           value:
             name: SIMPLE_MAP_STRING_VALUE
             value: "hello"
+      - equal:
+          path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_UNQUOTED_STRING_VALUE")]
+          value:
+            name: SIMPLE_MAP_UNQUOTED_STRING_VALUE
+            value: "this is an unquoted String"
       - equal:
           path: envs.simple-map-name-implicit[?(@.name=="SIMPLE_MAP_BOOL_VALUE")]
           value:
@@ -108,12 +118,17 @@ tests:
     asserts:
       - lengthEqual:
           path: envs.simple-map-name-explicit
-          count: 6
+          count: 7
       - equal:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_STRING_VALUE")]
           value:
             name: CUSTOM_PREFIX_STRING_VALUE
             value: "hello"
+      - equal:
+          path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_UNQUOTED_STRING_VALUE")]
+          value:
+            name: CUSTOM_PREFIX_UNQUOTED_STRING_VALUE
+            value: "this is an unquoted String"
       - equal:
           path: envs.simple-map-name-explicit[?(@.name=="CUSTOM_PREFIX_BOOL_VALUE")]
           value:
@@ -147,6 +162,8 @@ tests:
           value:
             - name: STRING_VALUE
               value: "hello"
+            - name: UNQUOTED_STRING_VALUE
+              value: "this is an unquoted String"
             - name: BOOL_VALUE
               value: false
             - name: NUMBER_VALUE
@@ -165,6 +182,8 @@ tests:
           value:
             - name: SIMPLE_LIST_STRING_VALUE
               value: "hello"
+            - name: SIMPLE_LIST_UNQUOTED_STRING_VALUE
+              value: "this is an unquoted String"
             - name: SIMPLE_LIST_BOOL_VALUE
               value: false
             - name: SIMPLE_LIST_NUMBER_VALUE
@@ -183,6 +202,8 @@ tests:
           value:
             - name: CUSTOM_PREFIX_STRING_VALUE
               value: "hello"
+            - name: CUSTOM_PREFIX_UNQUOTED_STRING_VALUE
+              value: "this is an unquoted String"
             - name: CUSTOM_PREFIX_BOOL_VALUE
               value: false
             - name: CUSTOM_PREFIX_NUMBER_VALUE
@@ -398,12 +419,17 @@ tests:
     asserts:
       - lengthEqual:
           path: envs.edge-case-ignore-subkeys-map
-          count: 4
+          count: 5
       - equal:
           path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_STRING_VALUE")]
           value:
             name: IGNORE_SUBKEYS_MAP_VALID_STRING_VALUE
             value: "hello"
+      - equal:
+          path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_UNQUOTED_STRING_VALUE")]
+          value:
+            name: IGNORE_SUBKEYS_MAP_VALID_UNQUOTED_STRING_VALUE
+            value: "this is an unquoted String"
       - equal:
           path: envs.edge-case-ignore-subkeys-map[?(@.name=="IGNORE_SUBKEYS_MAP_VALID_BOOL_VALUE")]
           value:
@@ -430,6 +456,8 @@ tests:
           value:
             - name: IGNORE_SUBKEYS_LIST_VALID_STRING_VALUE
               value: "hello"
+            - name: IGNORE_SUBKEYS_LIST_VALID_UNQUOTED_STRING_VALUE
+              value: "this is an unquoted String"
             - name: IGNORE_SUBKEYS_LIST_VALID_BOOL_VALUE
               value: false
             - name: IGNORE_SUBKEYS_LIST_VALID_NUMBER_VALUE

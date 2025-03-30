@@ -20,6 +20,7 @@ simpleValue: simpleValue
 
 simpleMap:
   stringValue: "hello"
+  unquotedStringValue: this is an unquoted String
   boolValue: false
   numberValue: 42
   logLevel: debug
@@ -28,6 +29,7 @@ simpleMap:
 
 simpleList:
   - stringValue: "hello"
+  - unquotedStringValue: this is an unquoted String
   - boolValue: false
   - numberValue: 42
   - logLevel: debug
@@ -126,6 +128,7 @@ mixedList:
 edgeCases:
   ignoreSubkeysMap:
     validStringValue: "hello"
+    validUnquotedStringValue: this is an unquoted String
     validBoolValue: false
     validNumberValue: 42
     validValueFrom:
@@ -154,6 +157,7 @@ edgeCases:
 
   ignoreSubkeysList:
     - validStringValue: "hello"
+    - validUnquotedStringValue: this is an unquoted String
     - validBoolValue: false
     - validNumberValue: 42
     - validValueFrom:
