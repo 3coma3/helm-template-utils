@@ -79,7 +79,19 @@ Maps values to Kubernetes `EnvVar` fields
 
 **Description** 
 
-This is used as a `toEnv`  helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or nil otherwise.
+This is used as a `toEnv`  helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or `nil` otherwise.
+
+**Usage**
+
+```yaml
+# use as a predicate
+{{ if include "util.leafKind" target }} ...
+
+# use as a predicate and save the result in a single pass
+{{ if $kind := include "util.leafKind" target }} ...
+```
+
+**Behaviors**
 
 - A scalar ( `bool`, `int`, `int64` ,`float64` or `string`) will render its kind
 - A *well-formed* `valueFrom` will render the string "valueFrom"
@@ -89,6 +101,26 @@ This is used as a `toEnv`  helper that checks the kind of its context and return
 **Future enhancements**
 
 - optional extra typechecking on valueFrom
+
+
+
+
+### 📦 `util.isKeyValue`
+
+**Description** 
+
+A simple predicate testing for maps with a single key (a dict)
+
+**Usage**
+
+```yaml
+{{ if include "util.isKeyValue" target }} ...
+```
+
+**Behaviors**
+
+- On success it renders the string `"true"`
+- Otherwise it renders as `nil`
 
 
 
