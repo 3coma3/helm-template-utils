@@ -2,7 +2,42 @@
 
 Reusable helper templates for Kubernetes manifests
 
+---
 
+## About
+
+This library aims to simplify common tasks in Helm templating. While all the code operates on YAML data, most is specialized in working with **Helm Values**, which are expected to follow a certain YAML structure: a tree of key/values represented in Go (and thus Helm) as string-keyed maps, in other words: `map[string]interface{}`.
+
+In this sense, when talking about scalar, list or map *values* in the context of this library, we mean the *value* part in a *key/value node* in the Helm Values Tree.
+
+Take this `values.yaml` for example:
+
+```yaml
+# ❌ Valid YAML but not valid Helm values
+# YAML: a plain scalar string
+# Helm: error – expected a top-level map
+"hello world"
+
+# ✅ Typical scalar value in Helm (keyed)
+# { key: "configurationKey1", value: true }
+configurationKey1: true
+
+# ✅ Nested map
+# { key: "aMap", value: { "subKey1": "a string", "subKey2": 42 } }
+aMap:
+  subKey1: "a string"
+  subKey2: 42
+
+# ✅ Mixed list
+# { key: "aList", value: [ { "subKey1": "a string" }, "other string" ] }
+aList:
+  - subKey1: "a string"
+  - "other string"
+```
+
+We can see that while some YAML constructs like "top-level scalars" or lists of primitives could technically be valid YAML, they **don’t make practical sense in Helm values**, which are expected to be dictionaries or lists of dictionaries. The code by default will be forgiving and **silently ignore** entries that are not compatible (e.g., scalars when a map is expected, or malformed `valueFrom` entries). Keep this in mind to avoid surprises.
+
+In future expansions, optional levels of strictness could be added that would make the library work more as a lightweight type checker to help with debugging or enforcing proper value structures. In the meantime, this library aims to "just work" with common real-world inputs.
 
 ---
 
@@ -50,22 +85,47 @@ Maps values to Kubernetes `EnvVar` fields
 
 **Behaviors**
 
-- Supports scalar, valueFrom, list and map targets:
-  - scalars become single values
-  - list and maps generate multiple entries
-  - valueFrom entries are rendered properly
-  - light typechecking on valueFrom (via [`util.leafKind`](#-utilleafkind))
-  - supports collections with mixed scalar/valueFrom entries
-- Silently filters out:
-  - undefined and missing keys
-  - container subkeys except valueFrom (it's not recursive)
-  - malformed valueFrom entries
-  - list entries that aren't key/value maps
-  
+- Accepts the following values:
+  - scalars → generate a single `value` entry
+  - maps → generate one `EnvVar` per key
+  - lists *→* generate one `EnvVar` per entry
+  - `valueFrom` *→* rendered properly and type checked via [`util.leafKind`](#-utilleafkind)
+- Silently ignores:
+  - undefined or `nil` targets
+  - nested lists and maps, except proper `valueFrom` (ie: it's not recursive)
+  - improper `valueFrom` maps
+  - list entries that are not dicts (key/value maps)
 - Optional prefixing for generated variable names:
-  - A second argument will always be used as the prefix
-  - If the prefix exists as a subkey in the target, it will *become* the target for processing
+  - a second `string` argument becomes a prefix for the generated names
+  - if the prefix exists as a subkey in a target map, it is processed instead
 - Uses [`util.SSCase`](#-utilsscase) for name and prefix formatting
+
+**Example**
+
+Input values:
+
+```yaml
+database:
+  host: localhost
+  port: 5432
+```
+
+Include:
+
+```yaml
+env: {{ include "util.toEnv" (list .Values.database "DB config") }}
+```
+
+Rendered output:
+
+```yaml
+- name: DB_CONFIG_HOST
+  value: "localhost"
+- name: DB_CONFIG_PORT
+  value: "5432"
+```
+
+More examples can be found in the [`test chart`](test/) in this repo.
 
 **Future enhancements**
 
@@ -79,7 +139,7 @@ Maps values to Kubernetes `EnvVar` fields
 
 **Description** 
 
-This is used as a `toEnv`  helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or `nil` otherwise.
+This is used as a [`toEnv`](#-utiltoenv) helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or `nil` otherwise
 
 **Usage**
 
@@ -119,23 +179,22 @@ A simple predicate testing for maps with a single key (a dict)
 
 **Behaviors**
 
-- On success it renders the string `"true"`
-- Otherwise it renders as `nil`
+- Renders `"true"` if the input is a map with exactly one key, otherwise it renders nothing
 
 
 
 ---
 
-## Testing and examples
+## Testing
 
-See the test chart in `test/` for examples. The assertions should cover every possible case, but if you spot omissions, be welcome to open an issue about it.
+The templates and assertions in the [`test chart`](test/) should cover every possible case, but if you spot omissions, be welcome to open an issue about it.
 
 Run the test template with:
 
 ```bash
 make test
 ```
-Run the helm-unittest templates with:
+To run the [helm-unittest](https://github.com/helm-unittest/helm-unittest) templates, install that plugin and run:
 ```bash
 make unittest
 ```
