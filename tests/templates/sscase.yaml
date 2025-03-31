@@ -1,43 +1,43 @@
 # sscase.yaml
 env:
-  - name: "SSCase - camelCase"
+  - name: "camelCase"
     value: {{ include "util.SSCase" .Values.caseTests.camelCase }}
 
-  - name: "SSCase - camel_Snake_Case"
+  - name: "camel_Snake_Case"
     value: {{ include "util.SSCase" .Values.caseTests.camel_Snake_Case }}
 
-  - name: "SSCase - camel.snake.dot"
+  - name: "camel.snake.dot"
     value: {{ include "util.SSCase" (get .Values.caseTests "camel.Snake.Dot") }}
 
-  - name: "SSCase - snake_case"
+  - name: "snake_case"
     value: {{ include "util.SSCase" .Values.caseTests.snake_case }}
 
-  - name: "SSCase - kebab-case"
+  - name: "kebab-case"
     value: {{ include "util.SSCase" (get .Values.caseTests "kebab-case") }}
 
-  - name: "SSCase - SCREAMING-KEBAB-CASE"
+  - name: "SCREAMING-KEBAB-CASE"
     value: {{ include "util.SSCase" (get .Values.caseTests "SCREAMING-KEBAB-CASE") }}
 
-  - name: "SSCase - PascalCase"
+  - name: "PascalCase"
     value: {{ include "util.SSCase" .Values.caseTests.PascalCase }}
 
-  - name: "SSCase - Train-Case"
+  - name: "Train-Case"
     value: {{ include "util.SSCase" (get .Values.caseTests "Train-Case") }}
 
-  - name: "SSCase - MixedCASEValue"
+  - name: "MixedCASEValue"
     value: {{ include "util.SSCase" .Values.caseTests.mixedCASEValue }}
 
-  - name: "SSCase - non,.;alnum$!)*in%(+=@key&name"
+  - name: "non,.;alnum$!)*in%(+=@key&name"
     value: {{ include "util.SSCase" (get .Values.caseTests "non,.;alnum$!)*in%(+=@key&name") }}
 
-  - name: "SSCase - $delimitersBeginEnd_"
+  - name: "$delimitersBeginEnd_"
     value: {{ include "util.SSCase" (get .Values.caseTests "$delimitersBeginEnd_") }}
 
-  - name: "SSCase - mMiXeD123"
+  - name: "mMiXeD123"
     value: {{ include "util.SSCase" .Values.caseTests.mMiXeD123 }}
 
-  - name: "SSCase - spOngeBoB_CaSe"
+  - name: "spOngeBoB_CaSe"
     value: {{ include "util.SSCase" .Values.caseTests.spOngeBoB_CaSe }}
 
-  - name: "SSCase - spOngeBoB-KeBaB-CaSe"
+  - name: "spOngeBoB-KeBaB-CaSe"
     value: {{ include "util.SSCase" (get .Values.caseTests "spOngeBoB-KeBaB-CaSe") }}
