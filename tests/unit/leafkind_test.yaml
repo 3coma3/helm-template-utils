@@ -1,0 +1,51 @@
+# toenv_test.yaml
+suite: leafKind Tests
+templates:
+  - leafkind.yaml
+tests:
+  - it: sanity check
+    asserts:
+      - exists:
+          path: env
+
+  - it: "leafKind - string"
+    asserts:
+      - equal:
+          path: env[?(@.name=="string")].value
+          value: string
+
+  - it: "leafKind - unquoted string"
+    asserts:
+      - equal:
+          path: env[?(@.name=="unquoted string")].value
+          value: string
+
+  - it: "leafKind - number"
+    asserts:
+      - equal:
+          path: env[?(@.name=="number")].value
+          value: float64
+
+  - it: "leafKind - bool"
+    asserts:
+      - equal:
+          path: env[?(@.name=="bool")].value
+          value: bool
+
+  - it: "leafKind - valueFrom"
+    asserts:
+      - equal:
+          path: env[?(@.name=="valueFrom")].value
+          value: valueFrom
+
+  - it: "leafKind - map"
+    asserts:
+      - equal:
+          path: env[?(@.name=="map")].value
+          value: null
+
+  - it: "leafKind - list"
+    asserts:
+      - equal:
+          path: env[?(@.name=="list")].value
+          value: null

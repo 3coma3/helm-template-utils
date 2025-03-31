@@ -1,0 +1,22 @@
+# leafkind.yaml
+env:
+  - name: string
+    value: {{ include "util.leafKind" .Values.simpleValue }}
+
+  - name: unquoted string
+    value: {{ include "util.leafKind" .Values.simpleMap.unquotedStringValue }}
+
+  - name: number
+    value: {{ include "util.leafKind" .Values.simpleMap.numberValue }}
+
+  - name: bool
+    value: {{ include "util.leafKind" .Values.simpleMap.boolValue }}
+
+  - name: valueFrom
+    value: {{ include "util.leafKind" .Values.simpleValueFrom }}
+
+  - name: map
+    value: {{ include "util.leafKind" .Values.simplemap }}
+
+  - name: list
+    value: {{ include "util.leafKind" .Values.simpleList }}

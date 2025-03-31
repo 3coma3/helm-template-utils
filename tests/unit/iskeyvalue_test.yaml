@@ -1,0 +1,51 @@
+# toenv_test.yaml
+suite: isKeyValue Tests
+templates:
+  - iskeyvalue.yaml
+tests:
+  - it: sanity check
+    asserts:
+      - exists:
+          path: env
+
+  - it: "isKeyValue - string"
+    asserts:
+      - equal:
+          path: env[?(@.name=="string")].value
+          value: null
+
+  - it: "isKeyValue - unquoted string"
+    asserts:
+      - equal:
+          path: env[?(@.name=="unquoted string")].value
+          value: null
+
+  - it: "isKeyValue - number"
+    asserts:
+      - equal:
+          path: env[?(@.name=="number")].value
+          value: null
+
+  - it: "isKeyValue - bool"
+    asserts:
+      - equal:
+          path: env[?(@.name=="bool")].value
+          value: null
+
+  - it: "isKeyValue - valueFrom"
+    asserts:
+      - equal:
+          path: env[?(@.name=="valueFrom")].value
+          value: true
+
+  - it: "isKeyValue - map"
+    asserts:
+      - equal:
+          path: env[?(@.name=="map")].value
+          value: null
+
+  - it: "isKeyValue - list"
+    asserts:
+      - equal:
+          path: env[?(@.name=="list")].value
+          value: null

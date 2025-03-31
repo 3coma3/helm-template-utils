@@ -1,0 +1,22 @@
+# iskeyvalue.yaml
+env:
+  - name: string
+    value: {{ include "util.isKeyValue" .Values.simpleValue }}
+
+  - name: unquoted string
+    value: {{ include "util.isKeyValue" .Values.simpleMap.unquotedStringValue }}
+
+  - name: number
+    value: {{ include "util.isKeyValue" .Values.simpleMap.numberValue }}
+
+  - name: bool
+    value: {{ include "util.isKeyValue" .Values.boolValue }}
+
+  - name: valueFrom
+    value: {{ include "util.isKeyValue" .Values.simpleValueFrom }}
+
+  - name: map
+    value: {{ include "util.isKeyValue" .Values.simplemap }}
+
+  - name: list
+    value: {{ include "util.isKeyValue" .Values.simpleList }}
