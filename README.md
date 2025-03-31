@@ -142,12 +142,12 @@ Maps values to Kubernetes `EnvVar` fields
 
 ##### Accepted target values
 
-|               Target value               |                           Outcome                            |
+|              Target values               |                           Outcome                            |
 | :--------------------------------------: | :----------------------------------------------------------: |
-|                  scalar                  |            render a list with a single  `EnvVar`             |
-|                   map                    |       render a  list with one `EnvVar` item per member       |
-|                   list                   |    render a  list with one `EnvVar` item per target item     |
-|                valueFrom                 | type checked via [`util.leafKind`](#-utilleafkind) and rendered accordingly |
+|                  scalar                  |                  renders one  `EnvVar` item                  |
+|                   map                    |             renders one `EnvVar` item per member             |
+|                   list                   |          renders one `EnvVar` item per target item           |
+|                valueFrom                 | type checked via [`util.leafKind`](#-utilleafkind) and rendered as one item |
 |         undefined or nil targets         |                       silently ignored                       |
 |    list items other than 1-member map    |                       silently ignored                       |
 |         improper valueFrom maps          |                       silently ignored                       |
