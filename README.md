@@ -10,10 +10,6 @@ Reusable helper templates for Kubernetes manifests
 
 > This section explains the **terminology** we use to for data structures and how the template code deals with **type errors**. Feel free to [`skip directly to the helper reference`](#templates) and come back later as needed.
 
-
-
-### Terminology
-
 This library contains helpers that simplify common tasks in Helm templating. 
 
 While all the code operates on YAML data, it focus on [**Helm Objects**](https://helm.sh/docs/chart_template_guide/builtin_objects/) (most frequently [Values](https://helm.sh/docs/chart_template_guide/values_files/)) - which are YAML trees of key/value mappings represented in Go -and thus Helm- as string-keyed maps. In other words: `map[string]interface{}`.
@@ -22,12 +18,13 @@ To disambiguate these and other entities with similar but not-quite-exactly-equa
 
 | [helm-template-utils](https://github.com/3coma3/helm-template-utils) |                   [Helm](https://helm.sh)                    |      [Sprig](https://masterminds.github.io/sprig)      | [Go text/template](https://pkg.go.dev/text/template) |             [YAML](https://yaml.org/spec/1.2.2)              |     [JSON](https://www.rfc-editor.org/rfc/rfc8259.html)      |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------: | :--------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|                          **value**                           |                            value                             |                         value                          |                        value                         |                            Value                             | [Value](https://www.rfc-editor.org/rfc/rfc8259.html#section-3) |
 |                          **scalar**                          | **[scalar](https://helm.sh/docs/chart_template_guide/yaml_techniques/#scalar-types-in-yaml)** |                         scalar                         |                        scalar                        |        [Scalar](https://yaml.org/spec/1.2.2/#scalars)        |                            Scalar                            |
 |                           **map**                            | **[map](https://helm.sh/docs/chart_template_guide/data_types/)** | [dict](https://masterminds.github.io/sprig/dicts.html) |                     struct, map                      |       [Mapping](https://yaml.org/spec/1.2.2/#mapping)        | [Object](https://www.rfc-editor.org/rfc/rfc8259.html#section-4) |
-|                       **(map) member**                       |                      **key/value pair**                      |                     key/value pair                     |                    field, element                    |      Mapping [node](https://yaml.org/spec/1.2.2/#nodes)      |                            Member                            |
+|                       **(map) member**                       |                         **k/v pair**                         |                        k/v pair                        |                    field, element                    |      Mapping [node](https://yaml.org/spec/1.2.2/#nodes)      |                            Member                            |
+|                      **(k/v pair) key**                      |                           **key**                            |                          key                           |                      name, key                       |                             Key                              |                             Name                             |
 |                           **list**                           | **[list](https://helm.sh/docs/chart_template_guide/function_list/#lists-and-list-functions)**, [slice](https://helm.sh/docs/chart_template_guide/data_types/) | [list](https://masterminds.github.io/sprig/lists.html) |                        slice                         | [Block Sequence](https://yaml.org/spec/1.2.2/#block-sequences) | [Array](https://www.rfc-editor.org/rfc/rfc8259.html#section-5) |
 |                       **(list) item**                        |                           **item**                           |                          item                          |                       element                        |  Block Sequence [node](https://yaml.org/spec/1.2.2/#nodes)   |                           Element                            |
+|                          **value**                           |                            value                             |                         value                          |                        value                         |                            Value                             | [Value](https://www.rfc-editor.org/rfc/rfc8259.html#section-3) |
 
 - With **list** we refer to **Helm lists** (which are referred to also as slices in Helm's documentation)
 - With **map** we refer to **Helm maps**
@@ -90,9 +87,9 @@ aList:
   - "other string"
 ```
 
-We see that some values that are valid YAML won’t work as Helm values. In addition, some values that are valid in YAML and Helm **may still be considered invalid or unsupported by this library** when generating content for Kubernetes manifests.
+We see that some values that are valid YAML won’t work as Helm values. Also, some values that are valid in YAML and Helm may still be considered invalid or unsupported by this library when generating content for Kubernetes manifests.
 
-For example, if you filter the last YAML document above into [`toEnv`](#-utiltoenv), the plain string will be ignored, because it lacks a key and cannot be mapped to a valid `EnvVar`. Keep this in mind to avoid surprises.
+To avoid surprises keep in mind that the code currently *filters out invalid Kubernetes data* without warnings or errors. For example, if you process the `aList` list with [`toEnv`](#-utiltoenv), the plain string `"other string"` will be silently ignored, because it lacks a key and cannot be mapped to a valid `EnvVar`. 
 
 In future expansions, optional levels of strictness might be added that would have some helpers work more as lightweight static checkers, to help with debugging or enforcing guarantees on the input. In the current state the code is intended to "just work" with common real-world input, and behaves more like a filter than a checker, skipping over data that it can't validate.
 
@@ -142,16 +139,16 @@ Maps values to Kubernetes `EnvVar` fields
 
 ##### Accepted target values
 
-|              Target values               |                           Outcome                            |
-| :--------------------------------------: | :----------------------------------------------------------: |
-|                  scalar                  |                  renders one  `EnvVar` item                  |
-|                   map                    |             renders one `EnvVar` item per member             |
-|                   list                   |          renders one `EnvVar` item per target item           |
-|                valueFrom                 | type checked via [`util.leafKind`](#-utilleafkind) and rendered as one item |
-|         undefined or nil targets         |                       silently ignored                       |
-|    list items other than 1-member map    |                       silently ignored                       |
-|         improper valueFrom maps          |                       silently ignored                       |
-| nested lists and maps (except valueFrom) |                       silently ignored                       |
+|                Target values                 |                           Outcome                            |
+| :------------------------------------------: | :----------------------------------------------------------: |
+|                    scalar                    |                  renders one  `EnvVar` item                  |
+|                 `valueFrom`                  | checked via [`util.leafKind`](#-utilleafkind) and rendered as one `EnvVar` item |
+|                     map                      |               renders multiple `EnvVar` items                |
+|                     list                     |               renders multiple `EnvVar` items                |
+|          improper `valueFrom` maps           |                           ignored                            |
+| list items other than scalar or `valueFrom`  |                           ignored                            |
+| map members other than scalar or `valueFrom` |                           ignored                            |
+|           undefined, null, invalid           |                           ignored                            |
 
 ##### Optional prefixing for generated variable names
 
@@ -191,7 +188,7 @@ More examples can be found in the [`test chart`](tests/) in this repo.
 
 #### Future enhancements
 
-- configurable strictness (enable extra [`leafKind`](#-utilleafkind) typechecks, exit on undefined or malformed entries, etc)
+- configurable strictness (extra [`leafKind`](#-utilleafkind) typechecks, warn or error instead of discard)
 - regex filters for keys or values
 
 
@@ -199,7 +196,7 @@ More examples can be found in the [`test chart`](tests/) in this repo.
 
 ### 📦 `util.leafKind`
 
-This is used as a [`toEnv`](#-utiltoenv) helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or `nil` otherwise
+This is used as a [`toEnv`](#-utiltoenv) helper that checks the kind of its context and returns it as string for *leaf* values (scalars and `valueFrom`), or `null` otherwise
 
 #### Usage
 
