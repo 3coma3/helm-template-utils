@@ -50,9 +50,9 @@ valueFrom
       {{- if eq $leafKind "valueFrom" -}}
         {{- printf "%s\n" (toYaml $v | nindent 2) -}}
       {{- else -}}
-        {{- printf "\n  value: %#v\n" $v -}}
+        {{- printf "\n  value: %s\n" (quote $v) -}}
       {{- end -}}
     {{- end -}}
-  {{ end }}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
